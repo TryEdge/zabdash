@@ -43,7 +43,7 @@ $api = new ZabbixApi($zabURL.'api_jsonrpc.php', ''. $zabUser .'', ''. $zabPass .
 	     <a href="mailto:stevenesdonato@gmail.com"> stevenesdonato@gmail.com </b> </a>
 	    <br>-->
 	    <br>
-	    <a href="https://sourceforge.net/projects/zabdash" target="_blank" >https://sourceforge.net/projects/zabdash</a>
+	    <a href="https://github.com/stdonato/zabdash" target="_blank" >https://github.com/stdonato/zabdash</a>
 	    <br><p></p>
 	    <br><p></p>
 	    

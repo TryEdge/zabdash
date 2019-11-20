@@ -20,13 +20,13 @@ if(isset($hostid)) {
 		$period = $_REQUEST['period'];
 	}
 	else {
-		$period = 3600;
+		$period = 60;
 	}
 	  
 // get all graphs
  $graphs = $api->graphGet(array(
      'output' => 'extend',
-     'hostids' => $hostid,     
+     'hostids' => $hostid,         
      'sortfield' => 'name',
 	  'sortorder' => 'ASC'
  ));
@@ -72,17 +72,18 @@ else {
 	  <button type="button" class="btn btn-primary" onclick='history.back();'><i class="fa fa-arrow-left"></i>&nbsp; <?php echo $labels['Back'] ;  ?></button>
 	</span>  
 	<span class="btn-group row pull-right">
-	  <button type="button" class="btn btn-primary" onclick='location.href="host_graphs.php?period=300&hostid=<?php echo $hostid;?>";'>5m</button>
-	  <button type="button" class="btn btn-primary" onclick='location.href="host_graphs.php?period=900&hostid=<?php echo $hostid;?>";'>15m</button>
-	  <button type="button" class="btn btn-primary" onclick='location.href="host_graphs.php?period=1800&hostid=<?php echo $hostid;?>";'>30m</button>
-	  <button type="button" class="btn btn-primary" onclick='location.href="host_graphs.php?period=3600&hostid=<?php echo $hostid;?>";'>1h</button>
-	  <button type="button" class="btn btn-primary" onclick='location.href="host_graphs.php?period=7200&hostid=<?php echo $hostid;?>";'>2h</button>
-	  <button type="button" class="btn btn-primary" onclick='location.href="host_graphs.php?period=21600&hostid=<?php echo $hostid;?>";'>6h</button>
-	  <button type="button" class="btn btn-primary" onclick='location.href="host_graphs.php?period=43200&hostid=<?php echo $hostid;?>";'>12h</button>
-	  <button type="button" class="btn btn-primary" onclick='location.href="host_graphs.php?period=86400&hostid=<?php echo $hostid;?>";'>1d</button>
-	  <button type="button" class="btn btn-primary" onclick='location.href="host_graphs.php?period=259200&hostid=<?php echo $hostid;?>";'>3d</button>
-	  <button type="button" class="btn btn-primary" onclick='location.href="host_graphs.php?period=604800&hostid=<?php echo $hostid;?>";'>7d</button>
-	  <button type="button" class="btn btn-primary" onclick='location.href="host_graphs.php?period=2592000&hostid=<?php echo $hostid;?>";'>1m</button>
+	  <button type="button" class="btn btn-primary" onclick='location.href="host_graphs.php?period=5&hostid=<?php echo $hostid;?>";'>5m</button>
+	  <button type="button" class="btn btn-primary" onclick='location.href="host_graphs.php?period=15&hostid=<?php echo $hostid;?>";'>15m</button>
+	  <button type="button" class="btn btn-primary" onclick='location.href="host_graphs.php?period=30&hostid=<?php echo $hostid;?>";'>30m</button>
+	  <button type="button" class="btn btn-primary" onclick='location.href="host_graphs.php?period=60&hostid=<?php echo $hostid;?>";'>1h</button>
+	  <button type="button" class="btn btn-primary" onclick='location.href="host_graphs.php?period=120&hostid=<?php echo $hostid;?>";'>2h</button>
+	  <button type="button" class="btn btn-primary" onclick='location.href="host_graphs.php?period=360&hostid=<?php echo $hostid;?>";'>6h</button>
+	  <button type="button" class="btn btn-primary" onclick='location.href="host_graphs.php?period=720&hostid=<?php echo $hostid;?>";'>12h</button>
+	  <button type="button" class="btn btn-primary" onclick='location.href="host_graphs.php?period=1440&hostid=<?php echo $hostid;?>";'>1d</button>
+	  <button type="button" class="btn btn-primary" onclick='location.href="host_graphs.php?period=4320&hostid=<?php echo $hostid;?>";'>3d</button>
+	  <button type="button" class="btn btn-primary" onclick='location.href="host_graphs.php?period=10080&hostid=<?php echo $hostid;?>";'>7d</button>
+	  <button type="button" class="btn btn-primary" onclick='location.href="host_graphs.php?period=43200&hostid=<?php echo $hostid;?>";'>1m</button>
+	  <button type="button" class="btn btn-primary" onclick='location.href="host_graphs.php?period=129600&hostid=<?php echo $hostid;?>";'>3m</button>
 	</span>
 	</div>
 
@@ -90,12 +91,12 @@ else {
 		<?php	
 			foreach($graphs as $g) {
 			
-			echo "<div class='col-lg-6 col-md-6 col-xs-6 thumb' style='padding: 6px !important; margin-bottom:0px; height:260px; '>";
-				echo '<a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="" data-caption="" data-image="../chart2.php?graphid='.$g->graphid.'&period='.$period.'&height=300" alt="" data-target="#image-gallery">';
-					echo '<img class="img-responsive ximg-thumbnail ximg-rounded" src="'.$zabURL.'chart2.php?graphid='.$g->graphid.'&period='.$period.'&height=280" />';
+			echo "<div class='col-lg-6 col-md-6 col-xs-6 thumb' style='padding: 6px !important; margin-bottom:0px; '>";
+				echo '<a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="" data-caption="" data-image="../chart2.php?graphid='.$g->graphid.'&from=now-'.$period.'m&to=now&profileIdx=web.graphs.filter&profileIdx2='.$g->graphid.'&height=300" alt="" data-target="#image-gallery">';
+					echo '<img class="img-responsive ximg-thumbnail ximg-rounded" src="'.$zabURL.'chart2.php?graphid='.$g->graphid.'&from=now-'.$period.'m&to=now&profileIdx=web.graphs.filter&profileIdx2='.$g->graphid.'&height=280" />';
 				echo '</a>';
 			echo "</div>\n";
-			
+			//chart2.php?graphid=17101&from=now-90m&to=now&profileIdx=web.graphs.filter&profileIdx2=17101&width=1170&_=tn8kj3t8&screenid=
 			}		
 		?>	
 	</div>

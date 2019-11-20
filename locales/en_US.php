@@ -41,7 +41,7 @@ return array(
 'Hosts' => 'Hosts',
 'Hosts Groups' => 'Hosts Groups',
 'Hosts Health' => 'Host Health',
-'Hosts Panel' => 'Hosts Panel',
+'Hosts Dashboard' => 'Hosts Dashboard',
 'Setup' => 'Setup',
 'Help' => 'Help',
 'Metrics' => 'Metrics',

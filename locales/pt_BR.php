@@ -41,7 +41,7 @@ return array(
 'Hosts' => 'Hosts',
 'Hosts Groups' => 'Grupos de Hosts',
 'Hosts Health' => 'Estado dos Hosts',
-'Hosts Panel' => 'Painel Hosts',
+'Hosts Dashboard' => 'Painel Hosts',
 'Setup' => 'Configuração',
 'Help' => 'Ajuda',
 'Metrics' => 'Métricas',

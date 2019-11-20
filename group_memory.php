@@ -36,14 +36,15 @@ foreach( $groupID as $g ) {
 				 	if($hosts['available'] == 1  ) { 
 				 				   
 				 		$searchValSize = 'total'; 
-					 	$searchValSize1 = 'total'; 
-					 	$searchValUsed = 'used'; 
+					 	//$searchValSize1 = 'total'; 
+					 	$searchValUsed = 'free'; 
 					 	$searchValUsed1 = 'available'; 
 										           
-					   $memSize = get_item_values_or($mem->itemid, $searchValSize,$searchValSize1);
+					   $memSize = get_item_values($mem->itemid, $searchValSize);
 					   $memUsed = get_item_values_or($mem->itemid, $searchValUsed,$searchValUsed1); 
-									   
-					
+					   //$memUsed = ($memSize['value_max'] - $memUsed['value_max']);
+													   
+									
 						//Size				
 						if($memSize['value_max'] != 0 || get_item_label($memSize['key_']) != '') {						
 							$arrSizeMem[] = get_item_label($memSize['key_']).",".$memSize['value_max'];
@@ -105,9 +106,7 @@ foreach( $groupID as $g ) {
 						}	
 					}
 				}
-					
-					//echo " <div class='col-md-".$md." col-sm-".$md."'>";
-					
+														
 					if($arrSizeMem[0] != '') {
 							
 						//hosts						 				

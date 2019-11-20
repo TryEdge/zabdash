@@ -235,16 +235,16 @@ if($headers[0] != '') {
                        		</li>                              
                        		
                        	  <li class=' '>
-	                          <a href='#' onclick="window.open('groups.php','iframe1'); scrollWin();" data-original-title='Panel'>
+	                          <a href='#' onclick="window.open('groups.php','iframe1'); scrollWin();" data-original-title='Dashboard'>
                                <i class="fa fa-desktop" aria-hidden="true"></i>
-                               <span class='hidden-minibar'><?php echo $labels['Hosts Panel']; ?></span>
+                               <span class='hidden-minibar'><?php echo $labels['Hosts Dashboard']; ?></span>
                            </a>  
                        		</li>
                            
-                         <li class='submenu'>
+                           <!-- <li class='submenu'>
                               <a class='dropdown' onClick='return false;' href='#' data-original-title='Health'>
                                   <i class='fa fa-medkit'></i>
-                                  <span class='hidden-minibar'><?php echo $labels['Hosts Health'];?>
+                                  <span class='hidden-minibar'><?php //echo $labels['Hosts Health'];?>
                                       <i class='fa fa-chevron-right  pull-right'></i>
                                   </span>
                               </a>
@@ -252,17 +252,18 @@ if($headers[0] != '') {
                                <li class=' '>
                                    <a href='#' onclick="window.open('hosts_storage.php','iframe1'); scrollWin();" data-original-title=' Storage'>
                                        <i class="fa fa-angle-right"></i>
-                                       <span class='hidden-minibar'> <?php echo $labels['Storage']; ?> </span>
+                                       <span class='hidden-minibar'> <?php //echo $labels['Storage']; ?> </span>
                                    </a>
                                </li>
                                <li class=' '>
                                     <a href='#' onclick="window.open('hosts_memory.php','iframe1'); scrollWin();" data-original-title=' Memory'>
                                        <i class="fa fa-angle-right"></i>
-                                       <span class='hidden-minibar'> <?php echo $labels['Memory']; ?> </span>
+                                       <span class='hidden-minibar'> <?php //echo $labels['Memory']; ?> </span>
                                    </a>
                                </li>                                                       
                            	</ul>                                    
-                         </li>
+                         </li> -->
+                         
                          <li class=' '>
                               <a href='#' onclick="window.open('hosts_disp.php','iframe1'); scrollWin();" data-original-title=' Availability'>
                                  <i class='fa fa-clock-o'></i>

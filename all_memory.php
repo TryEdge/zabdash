@@ -13,7 +13,7 @@ $md = 12;
 
 while ($hosts = DBFetch($dbHosts)) {
 
-if($hosts['status'] == 0 && $hosts['flags'] == 0) {
+//if($hosts['status'] == 0 && $hosts['flags'] == 0) {
 					
 	if($hosts['available'] == 1 ) 
 		{ $keyValue = 'vm.memory.size'; }
@@ -31,10 +31,14 @@ if($hosts['status'] == 0 && $hosts['flags'] == 0) {
 	  	
 	 	if($hosts['available'] == 1 ) { 
 	 	
-		 	$searchValSize = 'total'; $searchValUsed = 'used'; 
+	 		$searchValSize = 'total'; 
+		 	//$searchValSize1 = 'total'; 
+		 	$searchValUsed = 'free'; 
+		 	$searchValUsed1 = 'available'; 
 							           
 		   $memSize = get_item_values($mem->itemid, $searchValSize);
-		   $memUsed = get_item_values($mem->itemid, $searchValUsed);		   
+		   $memUsed = get_item_values_or($mem->itemid, $searchValUsed,$searchValUsed1); 
+		   //$memUsed = ($memSize['value_max'] - $memUsed['value_max']);													   									   
 		
 			//Size				
 			if($memSize['value_max'] != 0 || get_item_label($memSize['key_']) != '') {						
@@ -181,6 +185,6 @@ if($hosts['status'] == 0 && $hosts['flags'] == 0) {
 						
 		echo "</tbody></table>\n";										
 		echo "</div>\n";									
-	}
+	//}
 }									
 ?>

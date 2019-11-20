@@ -177,7 +177,8 @@ foreach($mems as $mem) {
  	//if($host['sa'] == 1 ) {
  		else {	  
 	
-		$searchValSize = 'hrStorageSizeinBytes'; $searchValUsed = 'hrStorageUsedinBytes'; 
+		$searchValSize = 'hrStorageSizeinBytes'; 
+		$searchValUsed = 'hrStorageUsedinBytes'; 
 		//$searchValSize = 'sysMemorySizeinBytes'; $searchValUsed = 'sysMemoryUsedinBytes'; 
 	
 	   $memSize = get_item_values($mem->itemid, $searchValSize);
