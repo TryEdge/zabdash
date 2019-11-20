@@ -15,8 +15,8 @@
 5 - Access URL http://<your zabbix server>/zabbix/zabdash;
 
 
-To add a menu item for ZabDash see README.txt file in menu folder.
 
+##To add a menu item for ZabDash see README.txt file in menu folder.
 
 
 Zabbix API Needs php-posix.
