@@ -2,7 +2,7 @@
 
 > Dashboard for Zabbix
 
-![](https://repository-images.githubusercontent.com/70854481/3cc6d100-884e-11e9-82f0-821e44ba5d40)
+![](https://repository-images.githubusercontent.com/70854481/30abb180-0beb-11ea-9ac4-099549fb99df)
 
 1 - Copy zabdash folder to Zabbix folder (/usr/share/zabbix);
 
