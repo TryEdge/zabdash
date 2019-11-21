@@ -163,8 +163,8 @@ body {
 }
 
 .tab_cadrehov th a, .tab_cadrehov th a:link {
-color: #ffffff;	
-	}
+	color: #ffffff;	
+}
 
 .tab_cadre {
    margin: 0 auto;
@@ -1267,7 +1267,9 @@ div#sheetname {position: absolute; top: -36px; right: 20px; z-index: 200; font-s
 }
 
  .link a, .link4 a {color: #fff !important; text-decoration: none;}
- .link a:link, .link4 a:link, a:focus, a:hover, a:visited {color: #fff !important; text-decoration: none; font-weight: bold;}
+ .link a:link, .link4 a:link, a:focus, a:hover, a:visited {
+ 	color: #fff !important; text-decoration: none; font-weight: bold;
+ 	}
 
 .box {
 
@@ -1505,6 +1507,37 @@ a {
 
 .show-setting {
 	display: inline-block;
+}
+
+.statbar {
+	text-align: center;
+	font-weight: bold;
+	font-size: 26px !important;	
+	font-family: 'RobotoDraft','Helvetica',sans-serif !important;
+	cursor: pointer;
+	color: #000;
+}
+
+#tablestat > tr > td a:link, a:visited {
+	color: #000 !important;
+}
+
+.barsev {
+	font-family: 'RobotoDraft','Helvetica',sans-serif !important;
+	font-size: 18px !important;
+	color: #000;
+}
+
+.tablestat, .tablestat1 {
+	border-color: #000;
+	border-width: 1px;
+	margin-bottom: 1px;
+}
+
+.tablestat1 {
+	float:none;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 

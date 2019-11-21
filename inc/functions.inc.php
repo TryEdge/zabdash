@@ -151,8 +151,8 @@ function getOS($hostid) {
 	}
 	
 	else {
-		$OS = 'none';
-		return ;
+		$OS = 'blank';
+		return $OS ;
 	}
 		
 }

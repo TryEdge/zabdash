@@ -13,7 +13,7 @@ use ZabbixApi\ZabbixApi;
 $api = new ZabbixApi($zabURL.'api_jsonrpc.php', ''. $zabUser .'', ''. $zabPass .'');
 
 
-$dbHostsCount = DBselect( 'SELECT SUM(case when status = 0 then 1 else 0 end) AS active, SUM(case when status = 1 then 1 else 0 end) AS inactive, SUM(case when status = 3 then 1 else 0 end) AS template FROM hosts WHERE flags = 0');
+$dbHostsCount = DBselect( 'SELECT SUM(case when status = 0 then 1 else 0 end) AS active, SUM(case when status = 1 then 1 else 0 end) AS inactive, SUM(case when status = 3 then 1 else 0 end) AS template FROM hosts WHERE flags IN (0,4)');
 $hostsCount = DBFetch($dbHostsCount);	
 
 //$dbTrig = DBselect( 'SELECT COUNT(hostid) AS hc FROM hosts WHERE status = 1 AND flags = 0');
@@ -21,12 +21,8 @@ $hostsCount = DBFetch($dbHostsCount);
 
 $trigger = $api->triggerGet(array(
 	'output' => 'extend',	
-	//'sortfield' => 'priority',
-	//'sortorder' => 'DESC',
 	'only_true' => '1',
 	'active' => '1', // include trigger state active not active
-	/*'withUnacknowledgedEvents' => '1', */
-	//'expandDescription' => '1',
 	'selectHosts' => 1							
 ));	
 
@@ -145,67 +141,52 @@ $users = $api->userGet(array(
 			  <div class="col-sm-3 col-md-3">
 				  <div class="dashbox shad panel panel-default db-redx row stat">
 								<div class="panel-left db-red row">					   	
-	<!--					   		<span style="vertical-align:middle; margin-top:18px;">-->
 						   			<i  style="vertical-align:middle; margin-top:18px;" class="fa fa-desktop fa-3x"></i>
-	<!--					   		</span>-->
 						   	</div>
 						   <div class="panel-right right" style='cursor:pointer;' onclick="window.open('../hosts.php');">
 	         				<span class="chamado"><?php echo _('Hosts'); ?></span><br>
 						     	<div id="odometer1" class="odometer" style="font-size: 25px;">   </div><p></p>
 	            			<span class="date" title="Active/Inactive"><span style="font-weightx:bold; color:#e33734;"><?php echo "<span style='color:#429e47;'>".$hostsCount['active']."</span><span class='date'> / </span> ". $hostsCount['inactive']; ?></span></span>												
 						   </div>
-	<!--					</div>-->
 					 </div>
 			  </div>
 			  
 			  <div class="col-sm-3 col-md-3">
 				 <div class="dashbox shad panel panel-default db-bluex row stat">
-<!--					<div class="panel-body">-->
 							<div class="panel-left db-blue">					   	
-<!--					   		<span style="vertical-align:middle; margin-top:18px;">-->
 					   			<i  style="vertical-align:middle; margin-top:18px;" class="fa fa-warning fa-3x"></i>
-<!--					   		</span>-->
 					   	</div>										 
-					   <div class="panel-right right " style='cursor:pointer;' onclick="window.open('../triggers.php');">	
+					   <div class="panel-right right " style='cursor:pointer;' onclick="window.open('../zabbix.php?action=problem.view');">	
          				<span class="chamado"><?php echo _('Triggers'); ?></span><br>
 							<div id="odometer2" class="odometer" style="font-size: 25px;">   </div><p></p>
          				<span class="date" title="Ack/Unack"><span style="font-weight:boldx; color:#e33734;"><?php echo "<span style='color:#429e47;'>".(count($trigger) - count($triggerUnack))."</span><span class='date'> / </span> ".count($triggerUnack); ?></span></span>
 					   </div>
-<!--					</div>-->
 				 </div>
 			  </div>																		
       								
 			  <div class="col-sm-3 col-md-3">
 				 <div class="dashbox shad panel panel-default db-purplex row stat">
-<!--					<div class="panel-body">-->
 
 			   		<div class="panel-left db-purple">					   	
-<!--					   <span style="vertical-align:middle; margin-top:18px;">-->
 			   			<i  style="vertical-align:middle; margin-top:18px;" class="fa fa-sitemap fa-3x"></i>
-<!--					   </span>-->
 				   	</div>	
 					   <div class="panel-right right" style='cursor:pointer;' onclick="window.open('../hostgroups.php');">
          				<span class="chamado"><?php echo _('Hosts groups'); ?></span><br>
 							<div id="odometer3" class="odometer" style="font-size: 25px;">   </div><p></p>
          				<span class="date"><b>&nbsp;</b></span>
 					   </div>										   
-<!--					</div>-->
 				 </div>
 			  </div>
 			  <div class="col-sm-3 col-md-3">
 				 <div class="dashbox shad panel panel-default db-orangex row stat">
-<!--					<div class="panel-body">-->
 			   		<div class="panel-left db-orange">					   	
-	<!--					<span style="vertical-align:middle; margin-top:18px;">-->
 			   			<i  style="vertical-align:middle; margin-top:18px;" class="fa fa-users fa-3x"></i>
-	<!--					</span>-->
 					   </div>	
-			   		<div class="panel-right right" style='cursor:pointer;' onclick="window.open('../users.php');">	
+			   		<div class="panel-right right" style='cursor:pointer;' onclick="window.open('../zabbix.php?action=user.list&ddreset=1');">	
          				<span class="chamado"><?php echo _('Users'); ?></span><br>                        				
 							<div id="odometer4" class="odometer" style="font-size: 25px;">   </div><p></p>
          				<span class="date"><b>&nbsp;</b></span>
 					   </div>
-<!--					</div>-->
 				 </div>
 			  </div>																	                          				                           							
 	</div>        
@@ -225,7 +206,14 @@ setTimeout(function(){
 
 </script> 
   
-<div id="widgets2" class="row">
+<div id="widgets2" class="row" style="margin-bottom: -20px !important;">
+
+	<div class="col-sm-12 col-md-12 align" style="float:left; margin-left: 0px; display: none;"> 
+		<?php
+			//include ("charts/triggers_severity_bar.inc.php");
+		?> 
+	</div>	
+	 				              
 	<div class="col-sm-6 col-md-6 align" style="float:left; margin-left: 0px;"> 	 				              
 	   <div id="tickets_status" class="widget2 widget-table action-table striped card1" >
 	      <div class="widget-header">                 
@@ -251,17 +239,16 @@ setTimeout(function(){
 	      <div id="severity1" style="height:400px !important; background:#fff;">
 	      	<div id="severity" class="align" style="height:280px !important; background:#fff;">	      	 			
 					<?php
-						include ("charts/triggers_severity.inc.php");
+						include ("charts/triggers_severity_tab.inc.php");
 					?> 	 						            
 				</div>
-				<div id="legend" class="col-sm-12 col-md-12 align" style="margin-top:35px; text-align:center; display:block;">
+				<div id="legend" class="col-sm-12 col-md-12 align" style="margin-top:35px; text-align:center; display:none;">
 		  		  <span class="label label-primary" style="background: #97AAB3 !important; border: 1px solid #97AAB3;"><?php echo _('Not classified'); ?></span>
 		  		  <span class="label label-success" style="background: #7499FF !important; border: 1px solid #7499FF;"><?php echo _('Information'); ?></span>
 	           <span class="label label-success" style="background: #FFC859 !important; border: 1px solid #FFC859; width:70px;"><?php echo _('Warning'); ?></span>
 	           <span class="label label-danger"  style="background: #FFA059 !important; border: 1px solid #FFA059; width:70px;"><?php echo _('Average'); ?></span>
 	           <span class="label label-warning" style="background: #E97659 !important; border: 1px solid #E97659; width:70px;"><?php echo _('High'); ?></span>
-	           <span class="label label-warning" style="background: #B10505 !important; border: 1px solid #B10505; width:70px;"><?php echo _('Disaster'); ?></span>
-	           		  		  
+	           <span class="label label-warning" style="background: #B10505 !important; border: 1px solid #B10505; width:70px;"><?php echo _('Disaster'); ?></span>	           		  		  
 				</div>  
 			</div>  
 		</div>
@@ -269,7 +256,7 @@ setTimeout(function(){
 
 </div>
 
-<div id="widgets" class="row" style="margin-top: 0px;">	
+<div id="widgets" class="row" style="margin-top: -15px;">	
 
 	<div class="col-sm-12 col-md-12 align" style="margin-left: 0px;"> 	 				              
 	   <div id="time" class="widget2 widget-table action-table striped card1" >
