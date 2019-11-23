@@ -71,6 +71,9 @@ if (strlen($login) === 32) {
 
 		<div class="login-box-body">
 			<div class="login-logo">
+				<img src="img/dash.png" style="height: 40px;" alt="">
+			</div>
+			<div class="login-logo">
 				<b>ZabDash</b>
 			</div>
 			<form id="form" name="form" method="post" action="">
