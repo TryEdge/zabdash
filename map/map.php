@@ -38,7 +38,6 @@ if(isset($_REQUEST['groupid']) && $_REQUEST['groupid'] != '' && $_REQUEST['group
 							ORDER BY name ASC');
 		}
 }
-
 ?>
 
 <html> 
@@ -47,7 +46,7 @@ if(isset($_REQUEST['groupid']) && $_REQUEST['groupid'] != '' && $_REQUEST['group
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 <meta http-equiv="content-language" content="en-us" />
-<meta http-equiv='refresh' content='90'>
+<meta http-equiv='refresh' content='900'>
 
 <link rel="icon" href="../img/favicon.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="../img/favicon.ico" type="image/x-icon" />
@@ -55,23 +54,55 @@ if(isset($_REQUEST['groupid']) && $_REQUEST['groupid'] != '' && $_REQUEST['group
 <link href="../css/font-awesome.css" type="text/css" rel="stylesheet" />
 <script src="../js/jquery.min.js" type="text/javascript" ></script>
 
-<script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript" ></script>  
 <link href="css/map.css" rel="stylesheet" type="text/css" />
-<script src="./js/markerclusterer.js" type="text/javascript" ></script>
-<!--<script src="../js/reload.js" type="text/javascript" ></script>-->
 <script src="../js/reload_param.js" type="text/javascript" ></script>
-<link href="css/google_api.css" rel="stylesheet" type="text/css" />   
+
+<link rel="stylesheet" href="css/leaflet.css" />
+<script src="js/leaflet.js"></script>
+<link rel="stylesheet" href="css/MarkerCluster.css" />
+<!--<link rel="stylesheet" href="css/MarkerCluster.Default.css" />-->
+<script src="js/leaflet.markercluster-src.js"></script>
+<link rel="stylesheet" href="css/leaflet-beautify-marker-icon.css">
+<script src="js/leaflet-beautify-marker-icon.js"></script>	
+
+<style type="text/css">
+	html { margin-top: 30px;}
+	a, a:visited, a:focus, a:hover { color: #0776cc;}	
+	#map_canvas {
+		margin-left: auto;
+		margin-right: auto;
+		float: none;
+		margin-top: 25px;
+		width: 93%;
+		height: 100%;
+	}
+	.mycluster-green {
+		width: 32px;
+		height: 32px;
+		line-height: 32px;
+		background-image: url('images/0-32.png');
+		text-align: center;		
+	}
+	
+	.mycluster-red {
+		width: 32px;
+		height: 32px;
+		line-height: 32px;
+		background-image: url('images/3-32.png');
+		text-align: center;		
+	}
+</style> 
  
 </head>
 
-<!-- google maps - by Stevenes Donato -->
-
 <script type="text/javascript">
 
-var markers=[];	                 
-var locations = [
+//var markers=[];	                 
+var locations = 
 
 <?php
+
+$locations = [];
 
 $icon_red = "./images/red-marker.png";
 $icon_green = "./images/green-marker.png";
@@ -81,223 +112,140 @@ while ($row = DBFetch($dbLoc)) {
   $id = $row['hostid'];
   $title = $row['host'];  
   $url = "../../zabbix.php?action=problem.view&filter_hostids%5B%5D=".$id ."&filter_set=1";
-  $host = "<a href=". $url ." target=_blank >" . $title . " (".$id.")</a>";  
+  $host = "<a href=". $url ." target=_blank >" . $title . "</a>";  
   $status = $row['conta'];  
   $local = $row['location']; 
   $lat = $row['lat']; 
   $lon = $row['lon']; 
-  $quant1 = $row['sd'];     
+  $quant = $row['sd'];     
   $desc = str_replace(["\r\n", "\r", "\n"], "<br/>",$row['description']);	
-  
-
-if($row['status'] == 0 && $row['flags'] == 0) {	
-
-	if ($quant1 != 0) {
-		//$color = $icon_red.$quant."";
-		$color = "./images/red-marker.png";				
-		$num_up = 0;	
-		$num_down = 1;	
-		$conta[] = $id;		
-	}
+	  
 	
-	if ($quant1 == 0) {
+	if($row['status'] == 0 && $row['flags'] == 0) {	
 	
-		$trigger = $api->triggerGet(array(
-			'output' => 'extend',
-			'hostids' => $id,
-			'sortfield' => 'priority',
-			'sortorder' => 'DESC',
-			'only_true' => '1',
-			'active' => '1', 
-			'withUnacknowledgedEvents' => '1'				
-		));
-	
-		if ($trigger) {
-	
-			// Highest Priority error
-			//$prio = $trigger[0]->priority;				
-			if($trigger[0]->value == 0) { $prio = 9;} 	
-	  		else { $prio = $trigger[0]->priority;} 			
-			$color = "./images/prio".$prio.".png";	
-			$num_up = 1;	
-			$num_down = 0;						
+		if ($quant != 0) {
+			//$color = "";
+			$color = "./images/prio5.png";				
+			$num_up = 0;	
+			$num_down = 1;	
+			$conta[] = $id;
+			$prio = 5;		
 		}
 		
-		else {	
-			$color = "./images/green-marker.png";							
-			$num_up = 1;	
-			$num_down = 0;
-		}
+		if ($quant == 0) {
 		
-	}
-}	
-
-echo "['$title', $lat, $lon, '$local', '$color', '$host', $id, $quant1, $num_up, $num_down, '$url', '$desc'],";
-
-$contaRed += $num_down;
-$showAlert += $id;
-
+			$trigger = $api->triggerGet(array(
+				'output' => 'extend',
+				'hostids' => $id,
+				'sortfield' => 'priority',
+				'sortorder' => 'DESC',
+				'only_true' => '1',
+				'active' => '1', 
+				//'withUnacknowledgedEvents' => '1',
+				'withLastEventUnacknowledged' => '1'			
+			));
+		
+			//var_dump($trigger);				
+		
+			if ($trigger) {
+		
+				// Highest Priority error
+				//$prio = $trigger[0]->priority;				
+				if($trigger[0]->value == 0) { $prio = 9; $num_up = 1; $num_down = 0;} 	
+		  		else { $prio = $trigger[0]->priority; $num_up = 0; $num_down = 1; } 			
+				$color = "./images/prio".$prio.".png";	
+				//$num_up = 0; $num_down = 1;		
+			}
+			
+			else {							
+				//$color = "./images/green-marker.png";
+				$color = "./images/prio9.png";							
+				$num_up = 1;	
+				$num_down = 0;
+			   $prio = 0;					
+			}			
+		}
+	}	
+	
+	//$contaRed += $num_down;
+	$showAlert[] += $id;
+	$ups[] += $num_ups;
+	$downs[] += $num_down;
+	
+	$locations[] = [
+	     $title,
+	     $lat,
+	     $lon,
+	     $local,
+	     $color,
+	     $host,
+	     $id,
+	     $quant,
+	     array_sum($ups),
+	     array_sum($downs),
+	     $url,
+	     $prio
+	 ];
 }
+echo json_encode($locations);
 ?>
-    ];
+;
     
 function initialize() {
    
-var mapOptions = {
-	mapTypeId: google.maps.MapTypeId.ROADMAP
-	//mapTypeId: google.maps.MapTypeId.HYBRID
-	//zoom:9,
-	//center: new google.maps.LatLng(40,-3)
-	};
-	
-    var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
-    var infowindow = new google.maps.InfoWindow();
-    var marker, i;
-
-    for (i = 0; i < locations.length; i++) {  
-
-// avoid markers with same location
-	 var min = .999999;
-	 var max = 1.000001;    
-  	 var offsetLat = locations[i][1] * (Math.random() * (max - min) + min);
-    var offsetLng = locations[i][2] * (Math.random() * (max - min) + min);      
-    
-      marker = new google.maps.Marker({
-        position: new google.maps.LatLng(offsetLat, offsetLng),
-        map: map,
-		  title: locations[i][0],	        
-        icon: {
-        url: locations[i][4],
-        //scaledSize: new google.maps.Size(32, 48) // pixels
-    		},     
-        host: locations[i][5],
-        id: locations[i][6],
-        quant: locations[i][7],
-        //shadow:'https://chart.googleapis.com/chart?chst=d_map_pin_shadow'
-        status: locations[i][7],
-        num_up: locations[i][8],
-        num_down: locations[i][9],
-        url: locations[i][10],        
-        infos: locations[i][11]        
-      });
-     
+	latlng = L.latLng(-9.95126,-63.9059);
+	var map = L.map('map_canvas').setView([-9.95126,-63.9059], 13);
+	    
+		var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+				attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+		}).addTo(map);
 		
-		//marker animation
-		marker.setAnimation(google.maps.Animation.DROP);
-      	
-      google.maps.event.addListener(marker, 'mouseover', (function(marker, i) {
-        return function() {
-        	        	
-        	//var infos1 = infos.replace(/(\r|\n)/g, '<br />');
-          //infowindow.setContent('<b>'+locations[i][5] + '</b><br> <?php echo $state; ?>: ' + locations[i][7]);
-          infowindow.setContent('<b>' + locations[i][5] + '</b><br>' + locations[i][11]);
-          infowindow.open(map, marker);
-        }
-      })(marker, i)); 
-
-	// close infowindow when zoom change 
-	google.maps.event.addListener(map, 'zoom_changed', function() { infowindow.close() }); 
-	            
-	markers.push(marker)			
-	}
-	
-	//center map
-	    var bounds = new google.maps.LatLngBounds();
-	    for (i = 0; i < locations.length; i++) {    
-	    bounds.extend(new google.maps.LatLng(locations[i][1], locations[i][2]));
-	 }
-	 map.fitBounds(bounds);
-
-
-// Define the marker clusterer color
-
- var styles = [];
-   for (var i = 0; i < 4; i++) {
-      image_path = "./images/";
-      image_ext = ".png";
-      styles.push({
-        url: image_path + i + image_ext,
-        height: 52,
-        width: 53
-      });
-    } 
- 
-        var mcOptions = { 
-        zoomOnClick: true,
-        gridSize:30,
-        minimumClusterSize: 4,
-        styles: styles,  
-        maxZoom: 15 
-         }
-     
-	//criar cluster
-	var markerClusterer = new MarkerClusterer(map, markers, mcOptions);	
-	
-	var iconCalculator = function(markers, numStyles) {
-      var total_up = 0;
-      var total_down = 0;
-      for (var i = 0; i < markers.length; i++) {
-        total_up += markers[i].num_up;
-        total_down += markers[i].num_down;
-      }
-
-      var ratio_up = total_up / (total_up + total_down);
-
-      //The map clusterer really does seem to use index-1... 
-  		  index_ = 1;
-  		
-      if (ratio_up < 0.9999) {
-        index_ = 4; // Could be 2, and then more code to use all 4 images
-      }				
-
-      return {
-        text: (total_up + total_down),         
-        index: index_
-      };
-    }
-
-    markerClusterer.setCalculator(iconCalculator);	
+		for(var i = 0; i < locations.length; i++) {
+			var a = locations[i];			
+			var markers = new L.MarkerClusterGroup({
+        		iconCreateFunction: function(cl) {
+            //var layer = cl.getAllChildMarkers()[0].l;
+            var layer = a[9];
+            var cor = layer !== 0 ? 'red' : 'green';            
+            return L.divIcon({ html: '<b>' + cl.getChildCount() + '</b>', className: 'mycluster-' + cor, iconSize: L.point(32, 32) });
+        	},        			
+			maxClusterRadius: 50, spiderfyOnMaxZoom: false, showCoverageOnHover: true, zoomToBoundsOnClick: false 
+			});
+		}			
+		
+	  //marcadores individuais			
+		var arr_markers = [];
+		
+		for (var i = 0; i < locations.length; i++) {			
+			var a = locations[i];			
+			var LeafIcon = L.Icon.extend({
+		    options: {
+	        //shadowUrl: 'leaf-shadow.png',			        
+	        iconSize:     [42, 42],
+	        shadowSize:   [42, 42],
+	        iconAnchor:   [42, 42],
+	        shadowAnchor: [4, 62],
+	        popupAnchor:  [-20, -45]
+		    }
+			});
 			
-	// Listen for a cluster to be clicked 
-	google.maps.event.addListener(markerClusterer, 'mouseover', function(cluster) {
-    var content = '';
+			var iconPrio = new LeafIcon({iconUrl: a[4]});
 
-    // Convert lat/long from cluster object to a usable MVCObject
-    var info = new google.maps.MVCObject;
-    info.set('position', cluster.center_);
+		   var marker = L.marker([a[1], a[2]], {icon: iconPrio, draggable: false}, {title: a[3]});
+		   marker.l = a[8];		   
 
-    //----
-    //Get markers
-    var markers = cluster.getMarkers();
-	 var titles = "";
-	  
-    //Get all the titles
-    for(var i = 0; i < markers.length; i++) {
-    	
-    	if (markers[i].status == 0) 
-    	{
-    		titles += <?php echo '"<a href='. $url .' target=_blank style=color:#43B53C; "+markers[i].host + "</a><br>"'; ?>;    			
-	   }
-	
-	   if (markers[i].status != 0)
-		{
-    		titles += <?php echo '"<a href='. $url .' target=_blank style=color:#990000; "+markers[i].host + "</a><br>"'; ?>;	
-	   }
-   }
+			marker.bindPopup(a[5]);
+			markers.addLayer(marker);
+			
+			//array to center
+			arr_markers.push([a[1], a[2]]);
+		}
 
-    var infowindow = new google.maps.InfoWindow();
-    infowindow.close();
-    infowindow.setContent(titles); //set infowindow content to titles    
-    infowindow.open(map, info);
-
-	 //close infowindow
-	 google.maps.event.addListener(markerClusterer, 'mouseout', function() { infowindow.close() });
-
-	 // close infowindow when zoom change
-	 google.maps.event.addListener(map, 'zoom_changed', function() { infowindow.close() });
-
-});
-
+		map.addLayer(markers);
+		
+		//center map		
+		var bounds = L.latLngBounds(arr_markers);
+		map.fitBounds(bounds);
 }
 </script> 
 
@@ -312,18 +260,16 @@ var mapOptions = {
 	 }	
 	 	
 	 $offAtual = count($conta);
+	 
 ?>
-
 
 <script type="text/javascript">
 
 function reloadPage() {
 	
 		$("#reload_page").click(function() {			
-			//window.location.href='index.php?off=<?php echo $offAtual; ?>';
 			window.location.href='map.php?groupid=<?php echo implode(",",$groupID); ?>';
-		});
-		
+		});		
 		
 		var reloadTimer = function(flag, interval) {
 		if (flag === true) {
@@ -336,8 +282,6 @@ function reloadPage() {
 				$("#countDownTimer").text(counter);
 	
 				if (counter === 0) {					
-					//window.location.reload();
-					//window.location.href='index.php?off=<?php echo $offAtual; ?>';
 					window.location.href='map.php?groupid=<?php echo implode(",",$groupID); ?>';
 					counter = interval;
 				}
@@ -415,7 +359,7 @@ function reloadPage() {
 	 }
 ?>
 
-	<body onload="initialize();reloadPage();" style="background:#e5e5e5;">
+	<body onload="initialize(); xreloadPage();" style="background:#e5e5e5;">
 	
 		<div id='container-fluid' class="col-md-12 col-sm-12"  style="margin-top: -50px; margin-bottom:2px;" > 
 			<div style="margin-top:2px;margin-bottom:1px;">
@@ -425,7 +369,7 @@ function reloadPage() {
 			</div>
 		</div>
 		<?php
-			if($showAlert == '' && $showAlert == 0) {
+			if(empty($showAlert) OR count($showAlert) == 0) {
 				echo '<div id="help" class="col-md-12 col-sm-12" style="display:block;">
 							<div class="alert alert-danger" role="alert">
 								<span>' .$labels['To view a host on the map enter your latitude and longitude in "Host inventory".'].'</span>

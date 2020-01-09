@@ -1515,7 +1515,11 @@ a {
 	font-size: 26px !important;	
 	font-family: 'RobotoDraft','Helvetica',sans-serif !important;
 	cursor: pointer;
-	color: #000;
+	color: #000 !important;
+}
+
+.statbar a:link, a:visited {
+	color: #000 !important;
 }
 
 #tablestat > tr > td a:link, a:visited {
