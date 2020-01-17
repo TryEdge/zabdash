@@ -1,6 +1,6 @@
 # ZabDash
 
-![](https://repository-images.githubusercontent.com/70854481/30abb180-0beb-11ea-9ac4-099549fb99df)
+![](https://repository-images.githubusercontent.com/70854481/87fda200-394e-11ea-932a-bd62b9b6b5d9)
 
 - View all graphs of host
 - View all graphs os hosts group
