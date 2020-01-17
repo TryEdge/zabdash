@@ -1,7 +1,7 @@
 # ZabDash
 
 
-![](https://repository-images.githubusercontent.com/189693207/0b4ecb00-85ec-11e9-8c44-8aa5c1fb7d94)
+![](https://repository-images.githubusercontent.com/70854481/30abb180-0beb-11ea-9ac4-099549fb99df)
 
 - View all graphs of host
 - View all graphs os hosts group
@@ -32,9 +32,6 @@
 - Make a copy of /usr/share/zabbix/include/menu.inc.php file.
 
 - Copy the file "menu/menu.inc.php" for your zabbix include folder (/usr/share/zabbix/include).
-
-![](https://user-images.githubusercontent.com/7674445/58826988-fa17b580-860f-11e9-83ab-af72303cb9fa.png)
-
 
 
 
