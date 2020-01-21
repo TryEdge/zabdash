@@ -46,7 +46,7 @@ if(isset($_REQUEST['groupid']) && $_REQUEST['groupid'] != '' && $_REQUEST['group
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 <meta http-equiv="content-language" content="en-us" />
-<meta http-equiv='refresh' content='900'>
+<meta http-equiv='refresh' content='180'>
 
 <link rel="icon" href="../img/favicon.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="../img/favicon.ico" type="image/x-icon" />
@@ -66,15 +66,16 @@ if(isset($_REQUEST['groupid']) && $_REQUEST['groupid'] != '' && $_REQUEST['group
 <script src="js/leaflet-beautify-marker-icon.js"></script>	
 
 <style type="text/css">
-	html { margin-top: 30px;}
+	html { margin-top: 35px;}
 	a, a:visited, a:focus, a:hover { color: #0776cc;}	
+	
 	#map_canvas {
 		margin-left: auto;
 		margin-right: auto;
 		float: none;
-		margin-top: 25px;
+		margin-top: 15px;
 		width: 93%;
-		height: 100%;
+		height: 93%;
 	}
 	.mycluster-green {
 		width: 32px;
@@ -359,7 +360,7 @@ function reloadPage() {
 	 }
 ?>
 
-	<body onload="initialize(); xreloadPage();" style="background:#e5e5e5;">
+	<body onload="initialize(); reloadPage();" style="background:#e5e5e5;">
 	
 		<div id='container-fluid' class="col-md-12 col-sm-12"  style="margin-top: -50px; margin-bottom:2px;" > 
 			<div style="margin-top:2px;margin-bottom:1px;">
@@ -396,8 +397,6 @@ function reloadPage() {
 				<i class="glyphicon glyphicon-refresh"></i><text id="countDownTimer"></text>
 			</button>
 		</div>		
-		<!-- interval selector -->	
-							
+		<!-- interval selector -->								
 	</body>
 </html>
-
