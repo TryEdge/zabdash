@@ -21,7 +21,9 @@ if(isset($_REQUEST['groupid']) && $_REQUEST['groupid'] != '' && $_REQUEST['group
 		$groupID = explode(",",$_REQUEST['groupid']);		
 		
 		if(in_array(-1, $groupID)) {		
-			$dbLoc = DBselect( 'SELECT hi.hostid, h.host, hi.name, hi.location, hi.location_lat AS lat, hi.location_lon AS lon , h.snmp_disable_until AS sd, h.status, h.flags, h.description							
+			$dbLoc = DBselect( 'SELECT hi.hostid, h.host, hi.name, hi.location,
+							hi.location_lat AS lat, hi.location_lon AS lon , h.snmp_disable_until AS sd, 
+							h.status AS status, h.flags, h.description, h.maintenance_status AS maint							
 							FROM host_inventory hi, hosts h 
 							WHERE hi.location_lat <> 0 
 							AND hi.hostid = h.hostid
@@ -29,7 +31,8 @@ if(isset($_REQUEST['groupid']) && $_REQUEST['groupid'] != '' && $_REQUEST['group
 		}
 		
 		else {					
-			$dbLoc = DBselect( 'SELECT hi.hostid, h.host, hi.name, hi.location, hi.location_lat AS lat, hi.location_lon AS lon , h.snmp_disable_until AS sd, h.status, h.flags, h.description							
+			$dbLoc = DBselect( 'SELECT hi.hostid, h.host, hi.name, hi.location, hi.location_lat AS lat, hi.location_lon AS lon ,
+							h.snmp_disable_until AS sd, h.status AS status, h.flags, h.description, h.maintenance_status AS maint							
 							FROM host_inventory hi, hosts h, hosts_groups hg 
 							WHERE hi.location_lat <> 0 
 							AND hi.hostid = h.hostid
@@ -42,11 +45,11 @@ if(isset($_REQUEST['groupid']) && $_REQUEST['groupid'] != '' && $_REQUEST['group
 
 <html> 
 <head>
-<title>Zabdash - <?php echo _('Hosts Map'); ?></title>
+<title>ZabDash - <?php echo _('Hosts Map'); ?></title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 <meta http-equiv="content-language" content="en-us" />
-<meta http-equiv='refresh' content='180'>
+<meta http-equiv='refresh' content='300'>
 
 <link rel="icon" href="../img/favicon.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="../img/favicon.ico" type="image/x-icon" />
@@ -74,7 +77,7 @@ if(isset($_REQUEST['groupid']) && $_REQUEST['groupid'] != '' && $_REQUEST['group
 		margin-right: auto;
 		float: none;
 		margin-top: 15px;
-		width: 93%;
+		width: 98%;
 		height: 93%;
 	}
 	.mycluster-green {
@@ -97,8 +100,7 @@ if(isset($_REQUEST['groupid']) && $_REQUEST['groupid'] != '' && $_REQUEST['group
 </head>
 
 <script type="text/javascript">
-
-//var markers=[];	                 
+               
 var locations = 
 
 <?php
@@ -113,65 +115,69 @@ while ($row = DBFetch($dbLoc)) {
   $id = $row['hostid'];
   $title = $row['host'];  
   $url = "../../zabbix.php?action=problem.view&filter_hostids%5B%5D=".$id ."&filter_set=1";
-  $host = "<a href=". $url ." target=_blank >" . $title . "</a>";  
-  $status = $row['conta'];  
+  $url_host = "../../hosts.php?form=update&hostid=".$id;
+  //$link = "<a href=". $url ." target=_blank >" . $title . "</a>";  
+  $status = $row['status'];  
   $local = $row['location']; 
   $lat = $row['lat']; 
   $lon = $row['lon']; 
   $quant = $row['sd'];     
   $desc = str_replace(["\r\n", "\r", "\n"], "<br/>",$row['description']);	
+  $maint = $row['maint']; 
 	  
+//if($row['status'] == 0 && $row['flags'] == 0) {	
+
+	if ($status != 0) {
+
+		#$color = "./images/prio5.png";
+		$color = 6;				
+		$num_up = 0;	
+		$num_down = 1;	
+		$conta[] = $id;
+		$prio = 6;	
+		$num_trig = 0;	
+		$url = $url_host;	
+	}
 	
-	if($row['status'] == 0 && $row['flags'] == 0) {	
+	if ($status == 0) {
 	
-		if ($quant != 0) {
-			//$color = "";
-			$color = "./images/prio5.png";				
-			$num_up = 0;	
-			$num_down = 1;	
-			$conta[] = $id;
-			$prio = 5;		
+		$trigger = $api->triggerGet(array(
+			'output' => 'extend',
+			'hostids' => $id,
+			'sortfield' => 'priority',
+			'sortorder' => 'DESC',
+			'only_true' => '1',
+			'active' => '1', 
+			//'withUnacknowledgedEvents' => '1',
+			'withLastEventUnacknowledged' => '1'			
+		));				
+	
+		if ($trigger) {
+	
+			// Highest Priority error			
+			if($trigger[0]->value == 0) { $prio = 9; $num_up = 1; $num_down = 0;} 	
+	  		else { $prio = $trigger[0]->priority; $num_up = 0; $num_down = 1; } 			
+			#$color = "./images/prio".$prio.".png";
+			$color = $prio;	
+			$num_trig = count($trigger);
 		}
 		
-		if ($quant == 0) {
-		
-			$trigger = $api->triggerGet(array(
-				'output' => 'extend',
-				'hostids' => $id,
-				'sortfield' => 'priority',
-				'sortorder' => 'DESC',
-				'only_true' => '1',
-				'active' => '1', 
-				//'withUnacknowledgedEvents' => '1',
-				'withLastEventUnacknowledged' => '1'			
-			));
-		
-			//var_dump($trigger);				
-		
-			if ($trigger) {
-		
-				// Highest Priority error
-				//$prio = $trigger[0]->priority;				
-				if($trigger[0]->value == 0) { $prio = 9; $num_up = 1; $num_down = 0;} 	
-		  		else { $prio = $trigger[0]->priority; $num_up = 0; $num_down = 1; } 			
-				$color = "./images/prio".$prio.".png";	
-				//$num_up = 0; $num_down = 1;		
-			}
-			
-			else {							
-				//$color = "./images/green-marker.png";
-				$color = "./images/prio9.png";							
-				$num_up = 1;	
-				$num_down = 0;
-			   $prio = 0;					
-			}			
-		}
-	}	
+		else {							
+			#$color = "./images/prio9.png";
+			$color = 9;							
+			$num_up = 1;	
+			$num_down = 0;
+		   $prio = 0;	
+			$num_trig = 0;	
+			$url = $url_host;			
+		}			
+	}
+//	}	
 	
-	//$contaRed += $num_down;
 	$showAlert[] += $id;
 	$ups[] += $num_ups;
 	$downs[] += $num_down;
+	$link = "<a href=". $url ." target=_blank >" . $title . "</a>";
 	
 	$locations[] = [
 	     $title,
@@ -179,13 +185,16 @@ while ($row = DBFetch($dbLoc)) {
 	     $lon,
 	     $local,
 	     $color,
-	     $host,
+	     $link,
 	     $id,
 	     $quant,
 	     array_sum($ups),
 	     array_sum($downs),
 	     $url,
-	     $prio
+	     $prio,
+	     $num_trig,
+	     $status,
+	     $maint
 	 ];
 }
 echo json_encode($locations);
@@ -205,7 +214,7 @@ function initialize() {
 			var a = locations[i];			
 			var markers = new L.MarkerClusterGroup({
         		iconCreateFunction: function(cl) {
-            //var layer = cl.getAllChildMarkers()[0].l;
+     
             var layer = a[9];
             var cor = layer !== 0 ? 'red' : 'green';            
             return L.divIcon({ html: '<b>' + cl.getChildCount() + '</b>', className: 'mycluster-' + cor, iconSize: L.point(32, 32) });
@@ -214,28 +223,58 @@ function initialize() {
 			});
 		}			
 		
-	  //marcadores individuais			
+	 	// individual markers			
 		var arr_markers = [];
 		
-		for (var i = 0; i < locations.length; i++) {			
-			var a = locations[i];			
-			var LeafIcon = L.Icon.extend({
-		    options: {
-	        //shadowUrl: 'leaf-shadow.png',			        
-	        iconSize:     [42, 42],
-	        shadowSize:   [42, 42],
-	        iconAnchor:   [42, 42],
-	        shadowAnchor: [4, 62],
-	        popupAnchor:  [-20, -45]
-		    }
-			});
+		for (var i = 0; i < locations.length; i++) {				 
 			
-			var iconPrio = new LeafIcon({iconUrl: a[4]});
+		   	var a = locations[i];
+			var cor;
+	
+			if (a[4] == 0) { cor = '#97AAB3' };
+			if (a[4] == 1) { cor = '#7499FF' };
+			if (a[4] == 2) { cor = '#FFC859' };
+			if (a[4] == 3) { cor = '#FFA059' };
+			if (a[4] == 4) { cor = '#e97659' };
+			if (a[4] == 5) { cor = '#e45959' };
+			if (a[4] == 6) { cor = '#e33734' }; // host offline
+			if (a[4] == 9) { cor = '#43B53C' }; // no trigger
+			if (a[4] != 6 && a[14] == 1) { cor = '#f24f1d' }; // maintenance
+			
+			// host offline
+			if (a[4] == 6 && a[13] == 1) {
+				var options = { isAlphaNumericIcon: true, text:'<i style="margin-left: -4px;" class="fa fa-times-circle"></i>', iconShape: 'marker', borderColor: cor, backgroundColor: cor, textColor: '#fff'};				
+			}	
+			// maintenance
+			else if (a[4] != 6 && a[14] == 1) {
+				var options = { isAlphaNumericIcon: true, text:'<i style="margin-left: -4px;" class="fa fa-wrench"></i>', iconShape: 'marker', borderColor: cor, backgroundColor: cor, textColor: '#fff'};								
+			}
+			// no trigger
+			else if (a[4] == 9) {										 	 		 	 			
+				var options = { isAlphaNumericIcon: true, text:'<i style="margin-left: -4px;" class="fa fa-check-circle"></i>', iconShape: 'marker', borderColor: cor, backgroundColor: cor, textColor: '#fff'};
+			}	
+				
+			else {
+				var options = { isAlphaNumericIcon: true, text:a[12], iconShape: 'marker', borderColor: cor, backgroundColor: cor, textColor: '#fff'};				
+			}		
+			
+		   var marker = L.marker([a[1], a[2]], {icon: L.BeautifyIcon.icon(options), draggable: false}, {title: a[3]});
+		   marker.l = a[8];  
+		   
 
-		   var marker = L.marker([a[1], a[2]], {icon: iconPrio, draggable: false}, {title: a[3]});
-		   marker.l = a[8];		   
-
-			marker.bindPopup(a[5]);
+			if (a[11] != 0 && a[11] != 6 && a[11] != 9) {
+				marker.bindPopup(a[5] + '<br> Triggers: ' + a[12]);								
+			}
+			else if (a[11] == 6 && a[13] == 1 ) {				
+				marker.bindPopup(a[5] + '<br> Host Offline');								
+			}
+			else if (a[4] != 6 && a[14] == 1) {
+				marker.bindPopup(a[5] + '<br> Maintenance');												
+			}
+			else {
+				marker.bindPopup(a[5]);								
+			}
+			
 			markers.addLayer(marker);
 			
 			//array to center
@@ -313,7 +352,6 @@ function reloadPage() {
 			reloadTimer(false);
 		}							
 });
-
 		
 		$(function($) {
 			$('#reload_selecter').change(function() {
@@ -322,9 +360,7 @@ function reloadPage() {
 				
 				localStorage.setItem('relInt',selectVal);
 				var inter = localStorage.getItem('relInt');
-				
-				//window.location.reload();
-				//window.location.href='index.php?off=<?php echo $offAtual; ?>';		
+						
 				window.location.href='map.php?groupid=<?php echo implode(",",$groupID); ?>';						
 
 				if (selectVal != 0) {
@@ -338,8 +374,6 @@ function reloadPage() {
 					$("#reload_page").removeAttr("disabled");
 
 					reloadTimer(false);
-					//window.location.reload();
-					//window.location.href='index.php?off=<?php echo $offAtual; ?>';
 					window.location.href='map.php?groupid=<?php echo implode(",",$groupID); ?>';
 				}
 			});
@@ -362,7 +396,7 @@ function reloadPage() {
 
 	<body onload="initialize(); reloadPage();" style="background:#e5e5e5;">
 	
-		<div id='container-fluid' class="col-md-12 col-sm-12"  style="margin-top: -50px; margin-bottom:2px;" > 
+		<div id='container-fluid' class="col-md-12 col-sm-12"  style="margin-top: -50px; margin-bottom:-15px;" > 
 			<div style="margin-top:2px;margin-bottom:1px;">
 			<div style="float:left;"><a href="<?php echo $zabURL; ?>" target="_blank"><img src="../img/zabbix.png" alt="Zabbix" style="height:28px;"></img></a></div> 	
 		   <div class="" id="date" style="color:#000; float:right; "><?php echo date("d F Y", time())." - "; echo date("H:i:s", time()); ?></div>	  
