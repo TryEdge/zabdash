@@ -8,6 +8,7 @@
 - Use search bar to filter hosts
 - Location Map for hosts (add latitude and longitude at host inventory)
 
+![](https://user-images.githubusercontent.com/7674445/72847060-2acc5e00-3c78-11ea-9b45-3e3dba02a832.png)
 
 
 ## Installation
