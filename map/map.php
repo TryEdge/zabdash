@@ -63,7 +63,7 @@ if(isset($_REQUEST['groupid']) && $_REQUEST['groupid'] != '' && $_REQUEST['group
 <link rel="stylesheet" href="css/leaflet.css" />
 <script src="js/leaflet.js"></script>
 <link rel="stylesheet" href="css/MarkerCluster.css" />
-<!--<link rel="stylesheet" href="css/MarkerCluster.Default.css" />-->
+<link rel="stylesheet" href="css/MarkerCluster.Default.css" />
 <script src="js/leaflet.markercluster-src.js"></script>
 <link rel="stylesheet" href="css/leaflet-beautify-marker-icon.css">
 <script src="js/leaflet-beautify-marker-icon.js"></script>	
@@ -78,7 +78,7 @@ if(isset($_REQUEST['groupid']) && $_REQUEST['groupid'] != '' && $_REQUEST['group
 		float: none;
 		margin-top: 15px;
 		width: 98%;
-		height: 93%;
+		height: 92%;
 	}
 	.mycluster-green {
 		width: 32px;
@@ -204,7 +204,7 @@ echo json_encode($locations);
 function initialize() {
    
 	latlng = L.latLng(-9.95126,-63.9059);
-	var map = L.map('map_canvas').setView([-9.95126,-63.9059], 13);
+	var map = L.map('map_canvas').setView([-9.95126,-63.9059], 12);
 	    
 		var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 				attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -213,24 +213,31 @@ function initialize() {
 		for(var i = 0; i < locations.length; i++) {
 			var a = locations[i];			
 			var markers = new L.MarkerClusterGroup({
-        		iconCreateFunction: function(cl) {
-     
+        		iconCreateFunction: function(cl) {     
             var layer = a[9];
             var cor = layer !== 0 ? 'red' : 'green';            
             return L.divIcon({ html: '<b>' + cl.getChildCount() + '</b>', className: 'mycluster-' + cor, iconSize: L.point(32, 32) });
         	},        			
-			maxClusterRadius: 50, spiderfyOnMaxZoom: false, showCoverageOnHover: true, zoomToBoundsOnClick: false 
+			maxClusterRadius: 20, spiderfyOnMaxZoom: true, showCoverageOnHover: true, zoomToBoundsOnClick: false 
 			});
 		}			
 		
-	 	// individual markers			
+	  // individual markers			
 		var arr_markers = [];
 		
 		for (var i = 0; i < locations.length; i++) {				 
-			
-		   	var a = locations[i];
+
+		   var a = locations[i];
 			var cor;
 	
+			// avoid markers with same location
+			var min = .999999;
+			var max = 1.00001;    
+			var offsetLat = a[1] * (Math.random() * (max - min) + min);
+			var offsetLng = a[2] * (Math.random() * (max - min) + min);  			
+			//var offsetLat = a[1];  			
+			//var offsetLng = a[2];  			
+		   
 			if (a[4] == 0) { cor = '#97AAB3' };
 			if (a[4] == 1) { cor = '#7499FF' };
 			if (a[4] == 2) { cor = '#FFC859' };
@@ -258,12 +265,12 @@ function initialize() {
 				var options = { isAlphaNumericIcon: true, text:a[12], iconShape: 'marker', borderColor: cor, backgroundColor: cor, textColor: '#fff'};				
 			}		
 			
-		   var marker = L.marker([a[1], a[2]], {icon: L.BeautifyIcon.icon(options), draggable: false}, {title: a[3]});
+		   var marker = L.marker([offsetLat, offsetLng], {icon: L.BeautifyIcon.icon(options), draggable: false}, {title: a[3]});
 		   marker.l = a[8];  
 		   
 
 			if (a[11] != 0 && a[11] != 6 && a[11] != 9) {
-				marker.bindPopup(a[5] + '<br> Triggers: ' + a[12]);								
+				marker.bindPopup(a[5] + '<br>Triggers: '  + a[12]);								
 			}
 			else if (a[11] == 6 && a[13] == 1 ) {				
 				marker.bindPopup(a[5] + '<br> Host Offline');								
@@ -278,7 +285,7 @@ function initialize() {
 			markers.addLayer(marker);
 			
 			//array to center
-			arr_markers.push([a[1], a[2]]);
+			arr_markers.push([offsetLat, offsetLng]);
 		}
 
 		map.addLayer(markers);
@@ -286,6 +293,9 @@ function initialize() {
 		//center map		
 		var bounds = L.latLngBounds(arr_markers);
 		map.fitBounds(bounds);
+		//var group = new L.featureGroup(arr_markers);
+		//map.fitBounds(group.getBounds());		
+		
 }
 </script> 
 
@@ -396,7 +406,7 @@ function reloadPage() {
 
 	<body onload="initialize(); reloadPage();" style="background:#e5e5e5;">
 	
-		<div id='container-fluid' class="col-md-12 col-sm-12"  style="margin-top: -50px; margin-bottom:-15px;" > 
+		<div id='container-fluid' class="col-md-12 col-sm-12"  style="margin-top: -40px; margin-bottom:-15px;" > 
 			<div style="margin-top:2px;margin-bottom:1px;">
 			<div style="float:left;"><a href="<?php echo $zabURL; ?>" target="_blank"><img src="../img/zabbix.png" alt="Zabbix" style="height:28px;"></img></a></div> 	
 		   <div class="" id="date" style="color:#000; float:right; "><?php echo date("d F Y", time())." - "; echo date("H:i:s", time()); ?></div>	  
@@ -415,9 +425,10 @@ function reloadPage() {
 		<div id="map_canvas"></div>
 		
 		<!-- interval selector -->
-		<div class="col-xs-3 col-sm-4 col-md-4 col-lg-1 form-group pull-right" style="float: right; width:125px; margin-top:15px;">
+		<div class="col-xs-3 col-sm-4 col-md-4 col-lg-1 form-group pull-right" style="float: right; width:125px; margin-top:8px;">
 			<select id="reload_selecter" class="form-control pull-right">
-				<option value="30">Default</option>						
+				<option value="0"><?php echo _('Disabled'); ?></option>						
+				<option value="30">30s</option>						
 				<option value="45">45s</option>			
 				<option value="60">60s</option>
 				<option value="90">90s</option>
@@ -427,10 +438,11 @@ function reloadPage() {
 			</select>
 		</div>	
 		<div>
-			<button id="reload_page" type="button" class="btn btn-default pull-right" style="margin-top:15px;">
+			<button id="reload_page" type="button" class="btn btn-default pull-right" style="margin-top:8px;">
 				<i class="glyphicon glyphicon-refresh"></i><text id="countDownTimer"></text>
 			</button>
 		</div>		
 		<!-- interval selector -->								
 	</body>
 </html>
+

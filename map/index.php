@@ -17,8 +17,6 @@ else {
 }
 	
 $dbGroups = DBselect( 'SELECT * FROM '.$grps.' WHERE groupid <> 1 ORDER BY name ASC');
-
-
 ?>
 
 <!DOCTYPE html>
@@ -57,8 +55,7 @@ $dbGroups = DBselect( 'SELECT * FROM '.$grps.' WHERE groupid <> 1 ORDER BY name 
 				<option value='-1'> <?php echo _('All'); ?> </option>
 				<?php
 					while ($groups = DBFetch($dbGroups)) {
-						echo "<option value='".$groups['groupid']."'>".$groups['name']."</option>\n";
-										
+						echo "<option value='".$groups['groupid']."'>".$groups['name']."</option>\n";										
 					}							
 				?>
 			</select><br><br><p>
@@ -79,7 +76,5 @@ if($group != '') {
 <script type="text/javascript">
 	$("#groupid").select2();
 </script>
-
-
 </body>
 </html>
