@@ -7,12 +7,4 @@ return array(
 'cn' = '中文'
 );
 
-
-/*
-$labels = include_once 'languages/pt.inc.php';
-
-Para ler o conteúdo, echo $labels['hello'];
-*/
-
-
 ?>

@@ -1,7 +1,7 @@
 <?php
 /*
 ** Zabbix
-** Copyright (C) 2001-2018 Zabbix SIA
+** Copyright (C) 2001-2020 Zabbix SIA
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -111,13 +111,14 @@ function zbx_construct_menu(&$main_menu, &$sub_menus, &$page, $action = null) {
 					'url' => 'imgstore.php'
 				],
 				[
-					'url' => 'search.php'
+					'url' => 'zabbix.php',
+					'action' => 'search',
+					'active_if' => ['search']
 				],
 				[
 					'url' => 'jsrpc.php'
-				]	
-				
-				//Zabdash
+				]
+			  //Zabdash
 				,[
 					'url' => 'zabdash/index.php',
 					'active_if' => ['report.services'],
@@ -125,7 +126,6 @@ function zbx_construct_menu(&$main_menu, &$sub_menus, &$page, $action = null) {
 					'sub_pages' => ['zabdash/index.php']
 				],
 				//Zabdash,	
-							
 			]
 		],
 		'cm' => [
@@ -178,14 +178,14 @@ function zbx_construct_menu(&$main_menu, &$sub_menus, &$page, $action = null) {
 					'url' => 'report4.php',
 					'label' => _('Notifications'),
 					'user_type' => USER_TYPE_ZABBIX_ADMIN
-				],	
-				
-				[
+				]	
+				//zabdash
+				,[
 					'url' => 'zabdash/zabdash.php',
 					'label' => _('ZabDash'),
 					'user_type' => USER_TYPE_ZABBIX_ADMIN
-				]					
-								
+				]		
+				//zabdash
 			]
 		],
 		'config' => [
@@ -265,7 +265,8 @@ function zbx_construct_menu(&$main_menu, &$sub_menus, &$page, $action = null) {
 						'adm.triggerseverities.php',
 						'adm.triggerdisplayoptions.php',
 						'adm.other.php'
-					]
+					],
+					'active_if' => ['autoreg.edit']
 				],
 				[
 					'url' => 'zabbix.php',
@@ -284,7 +285,9 @@ function zbx_construct_menu(&$main_menu, &$sub_menus, &$page, $action = null) {
 					'label' => _('User groups')
 				],
 				[
-					'url' => 'users.php',
+					'url' => 'zabbix.php',
+					'action' => 'user.list',
+					'active_if' => ['user.edit', 'user.list'],
 					'label' => _('Users')
 				],
 				[
@@ -304,9 +307,7 @@ function zbx_construct_menu(&$main_menu, &$sub_menus, &$page, $action = null) {
 					'label' => _('Queue')
 				]
 			]
-		],		
-		
-		
+		],
 		'login' => [
 			'label' => _('Login'),
 			'user_type' => 0,
@@ -314,7 +315,7 @@ function zbx_construct_menu(&$main_menu, &$sub_menus, &$page, $action = null) {
 			'pages' => [
 				[
 					'url' => 'index.php',
-					'sub_pages' => ['profile.php']
+					'sub_pages' => ['zabbix.php']
 				]
 			]
 		]
