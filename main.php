@@ -40,9 +40,6 @@ $triggerUnack = $api->triggerGet(array(
 
 $hostsGroups = $api->hostgroupGet(array(
 	'output' => 'extend',	
-	//'sortfield' => 'name',
-	//'sortorder' => 'ASC'
-	/*'real_hosts' => '1'*/
 ));
 
 $users = $api->userGet(array(

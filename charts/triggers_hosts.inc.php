@@ -1,14 +1,16 @@
 <?php
 
 $triggers = $api->triggerGet(array(
-	'output' => 'extend',
+	//'output' => 'extend',
 	/*'hostids' => $hostid,*/
-	'sortfield' => 'priority',
-	'sortorder' => 'DESC',
+	//'sortfield' => 'priority',
+	//'sortorder' => 'DESC',
 	'only_true' => '1',
 	'active' => '1', // include trigger state active not active
-	/*'withUnacknowledgedEvents' => '1',*/ 	
-	'selectHosts' => 1					
+	//'withUnacknowledgedEvents' => '1',	
+	//'withLastEventUnacknowledged' => '1',	
+	'selectHosts' => 1
+	//'min_severity' => 1			
 ));	
 
 $conta = count($triggers);
@@ -20,12 +22,12 @@ for($i=0; $i <= $conta; $i++) {
 	$triggerHost = $api->triggerGet(array(
 		'output' => 'extend',
 		'hostids' => $hostid,
-		'sortfield' => 'priority',
-		'sortorder' => 'DESC',
+		//'sortfield' => 'priority',
+		//'sortorder' => 'DESC',
 		'only_true' => '1',
-		'active' => '1',		
+		'active' => '1'	,	
 		//'expandDescription' => '1',
-		'selectHosts' => 1							
+		//'selectHosts' => 1							
 	));	
 
 	if($hostid <> '') {

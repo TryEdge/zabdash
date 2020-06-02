@@ -36,19 +36,7 @@ switch (date("w")) {
 
 //User id 
 $userid = get_userid(CWebUser::getSessionCookie());
-	  
-//check new version 																																																			
-/*
-$urlv = "https://sourceforge.net/p/zabdash/screenshot/".$version.".png";
-$headers = get_headers($urlv, 1);										
-
-if($headers[0] != '') {
-
-	if ($headers[0] == 'HTTP/1.0 404 Not Found' || $headers[0] == 'HTTP/1.1 404 Not Found') {
-		$newversion = "<a href='https://sourceforge.net/projects/zabdash/' target='_blank' style='margin-top:10px; margin-right: 12px; color:#fff;' class='blink_me'><i class='fa fa-refresh'></i><span>&nbsp;&nbsp;".  $labels['New version avaliable']. " </span></a>";		
-	}
-}  
-  */
+																																																		
 ?>
 
 <!DOCTYPE html>
@@ -70,14 +58,10 @@ if($headers[0] != '') {
     <!-- Color theme -->       		   
     <link rel="stylesheet" type="text/css" href="css/layout.css">
     
-     <!-- this page specific styles -->
-<!--    <link rel="stylesheet" href="css/index.css" type="text/css" media="screen" />    -->
-
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <link href="css/styles.css" rel="stylesheet" type="text/css" />
-<!--    <link href="css/style-dash.css" rel="stylesheet" type="text/css" />    -->
     
     <!-- odometer -->
 	<link href="css/odometer.css" rel="stylesheet">
@@ -105,7 +89,7 @@ if($headers[0] != '') {
  	 </script>
 
 <style type="text/css">
-	.loader { height: 140% !important;}
+	.loader { height: 150% !important;}
 </style>
 
 <link href="css/loader.css" type="text/css" rel="stylesheet" />

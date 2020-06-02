@@ -56,7 +56,7 @@ else {
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!--<meta http-equiv='refresh' content='120'>-->	
-	<title>Zabbix Hosts Disponibilidade</title>	
+	<title>Zabbix Hosts</title>	
 	
 	<link rel="icon" href="img/favicon.ico" type="image/x-icon" />
 	<link href="css/bootstrap.css" rel="stylesheet">
@@ -64,7 +64,6 @@ else {
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/jquery-ui-1.10.2.custom.min.js"></script>
-	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/styles.css" />
 	
 	<link href="inc/select2/select2.css" rel="stylesheet" type="text/css">

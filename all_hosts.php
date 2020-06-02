@@ -55,7 +55,7 @@ include('config.php');
 	
 	<?php		
 	
-	require_once 'lib/ZabbixApi.class.php';
+/*	require_once 'lib/ZabbixApi.class.php';
 	use ZabbixApi\ZabbixApi;
 	$api = new ZabbixApi($zabURL.'api_jsonrpc.php', ''. $zabUser .'', ''. $zabPass .'');
 	
@@ -63,12 +63,13 @@ include('config.php');
 		$include = 1;
 		$groupID = $_REQUEST['groupid'];		
 	}
-
+*/
 	$dbHostsCount = DBselect( 'SELECT COUNT(hostid) AS hc FROM hosts WHERE status <> 3 AND flags = 0');
 	$hostsCount = DBFetch($dbHostsCount);	
 	
 	$dbHosts = DBselect('SELECT hostid, name, status, snmp_available AS sa, snmp_disable_until AS sd, flags, maintenance_status AS ms FROM hosts WHERE status <> 3 AND flags = 0 ORDER BY name ASC');
-				
+	
+	//width			
 	$md = 11;	
 	
 	echo "			
@@ -87,7 +88,7 @@ include('config.php');
 		
 			while ($hosts = DBFetch($dbHosts)) {				
 			
-				if($hosts['sd'] <> 0) { $conn = "Offline"; $cor = "#E3573F"; $value = 1; } 
+				if($hosts['status'] <> 0) { $conn = "Offline"; $cor = "#E3573F"; $value = 1; } 
 				else { $conn = "Online"; $cor = "#4BAC64"; $value = 0; } 	
 					
 				$dbIP = DBSelect('SELECT DISTINCT ip FROM interface WHERE hostid ='.$hosts['hostid']);
@@ -95,7 +96,7 @@ include('config.php');
 				
 				$hostOS = getOS($hosts['hostid']);	
 				
-				$trigger = $api->triggerGet(array(
+/*				$trigger = $api->triggerGet(array(
 					'output' => 'extend',
 					'hostids' => $hosts['hostid'],
 					'sortfield' => 'priority',
@@ -103,9 +104,9 @@ include('config.php');
 					//'only_true' => '1',
 					//'active' => '1', // include trigger state active not active
 					//'withUnacknowledgedEvents' => '1' // show only unacknowledgeevents						
-				));	
+				));	*/
 				
-				if ($trigger) {
+/*				if ($trigger) {
 	
 				// Highest Priority error
 				$hostdivprio = $trigger[0]->priority;
@@ -132,7 +133,7 @@ include('config.php');
 							</td>
 						</tr>";								
 				}
-				else {
+				else {*/
 					
 					echo "
 						<tr>
@@ -152,7 +153,7 @@ include('config.php');
 								". hostStatus($hosts['status'],$hosts['ms']) ."
 							</td>
 						</tr>";					
-				}						
+//				}						
 		}
 
 echo "		</tbody>
