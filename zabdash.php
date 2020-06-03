@@ -89,7 +89,7 @@ $userid = get_userid(CWebUser::getSessionCookie());
  	 </script>
 
 <style type="text/css">
-	.loader { height: 150% !important;}
+	.loader { height: 120% !important;}
 </style>
 
 <link href="css/loader.css" type="text/css" rel="stylesheet" />
@@ -351,7 +351,8 @@ $userid = get_userid(CWebUser::getSessionCookie());
 </script> 
 
 </div>   
- <iframe id="iframe1" name="iframe1" class="iframe iframe-side" src="main.php" scrolling="yes" style="position: absolute; height: 100%; margin-bottom: 70px; border: none; display:block;"></iframe>
+ <iframe id="iframe1" name="iframe1" class="iframe iframe-side" src="main.php" scrolling="yes" style="position: absolute; height: 100%; margin-bottom: 70px; border: none; display:block;
+ "></iframe>
         	
 </div>		
 <!-- end main-content -->	
@@ -377,18 +378,19 @@ $userid = get_userid(CWebUser::getSessionCookie());
 <script src="js/jquery-ui-1.10.2.custom.min.js"></script>
    
 <script src="js/bootstrap.js"></script> 
-<script src="js/bootstrap-switch.js"></script> 
+<!--<script src="js/bootstrap-switch.js"></script> 
 <script src="js/jquery.accordion.js"></script>            
 <script src="js/bootstrap-dropdown.js"></script>
 <script src="js/jquery.address-1.6.min.js"></script>
-<script src="js/jquery.easy-pie-chart.js"></script> 
+<script src="js/jquery.easy-pie-chart.js"></script> -->
 
 <script src="js/theme.js"></script>         
 <script src="js/jquery.jclock.js"></script>
 
  <!-- Remove below two lines in production -->  
- <script src="js/theme-options.js"></script>       
- <script src="js/core.js"></script>
+<!-- <script src="js/theme-options.js"></script>       
+ <script src="js/core.js"></script>-->
+<script type="text/javascript" src="js/scripts.js"></script>
  
 </body>
 </html>

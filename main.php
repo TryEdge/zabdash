@@ -253,7 +253,7 @@ setTimeout(function(){
 
 </div>
 
-<div id="widgets" class="row" style="margin-top: -15px;">	
+<div id="widgets" class="row" style="margin-top: -25px;">	
 
 	<div class="col-sm-12 col-md-12 align" style="margin-left: 0px;"> 	 				              
 	   <div id="time" class="widget2 widget-table action-table striped card1" >
@@ -326,12 +326,12 @@ setTimeout(function(){
 <!-- /.site-holder -->
 
 <script src="js/jquery-ui.min.js" type="text/javascript"></script> 
-<script src="js/jquery.accordion.js"></script>            
+<!--<script src="js/jquery.accordion.js"></script>            
 <script src="js/bootstrap-dropdown.js"></script>
 <script src="js/jquery.easy-pie-chart.js"></script> 
-<script src="js/jquery.address-1.6.min.js"></script>
+<script src="js/jquery.address-1.6.min.js"></script>-->
 
-<script src="js/bootstrap-switch.js"></script> 
+<!--<script src="js/bootstrap-switch.js"></script> -->
 <script src="js/highcharts.js" type="text/javascript" ></script>
 <script src="js/highcharts-3d.js" type="text/javascript" ></script>
 <script src="js/modules/exporting.js" type="text/javascript" ></script>
@@ -339,10 +339,10 @@ setTimeout(function(){
 
 <script src="js/theme.js"></script>         
 <script src="js/jquery.jclock.js"></script>
-<script src="js/widgets.js"></script>
+<!--<script src="js/widgets.js"></script>
 
 <script src="js/raphael.2.1.0.min.js"></script>
-<script src="js/morris.min.js"></script>
+<script src="js/morris.min.js"></script>-->
 
 <!-- Highcharts export xls, csv 
 <script src="js/export-csv.js"></script>

@@ -26,6 +26,7 @@ include('config.php');
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.10.2.custom.min.js"></script>
+<script type="text/javascript" src="js/scripts.js"></script>
 
 <link rel="stylesheet" type="text/css" href="css/styles.css" />
 
@@ -140,7 +141,7 @@ include('config.php');
 							<td  style='background-color:".$cor.";' title='".$conn."' data-order='".$value."'>
 							</td>
 							<td class='link2' style='vertical-align:middle; text-align:left; padding:5px;'>
-								<a href='host_detail.php?hostid=".$hosts['hostid']."' target='_self' >".$hosts['name']."</a>
+								<a href='host_detail.php?hostid=".$hosts['hostid']."' target='_self' onmouseover='wait();'>".$hosts['name']."</a>
 							</td>
 							<td style='text-align:center;' data-order='".$hostOS."'>
 								<img src='img/os/".$hostOS.".png' title='".$hostOS."' alt=''/>

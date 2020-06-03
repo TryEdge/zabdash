@@ -17,8 +17,6 @@
 	$dbHosts = DBselect( 'SELECT h.hostid, h.name, h.status, h.snmp_available AS sa, h.snmp_disable_until AS sd, h.flags, g.name AS gname, h.maintenance_status AS ms FROM hosts h, hosts_groups hg, '.$grps.' g WHERE h.status <> 3 AND h.flags = 0 AND h.hostid = hg.hostid AND g.groupid = hg.groupid AND hg.groupid = '.$groupID.' ORDER BY h.name ASC');
 				
 	$md = 11;	
-
-   //echo 'SELECT h.hostid, h.name, h.status, h.snmp_available AS sa, h.snmp_disable_until AS sd, h.flags, g.name AS gname FROM hosts h, hosts_groups hg, '.$grps.' g WHERE h.status <> 3 AND h.flags = 0 AND h.hostid = hg.hostid AND g.groupid = hg.groupid AND hg.groupid = '.$groupID.' ORDER BY h.name ASC'	;	
 	
 	echo "	
 		<div class='align col-md-".$md." col-sm-".$md."' style='margin-bottom:80px;' >
@@ -39,7 +37,7 @@
 	
 	while ($hosts = DBFetch($dbHosts)) {				
 	
-		if($hosts['sd'] <> 0) { $conn = "Offline"; $cor = "#E3573F"; $value = 1; } 
+		if($hosts['status'] <> 0) { $conn = "Offline"; $cor = "#E3573F"; $value = 1; } 
 		else { $conn = "Online"; $cor = "#4BAC64"; $value = 0; } 	
 			
 		$dbIP = DBSelect('SELECT DISTINCT ip FROM interface WHERE hostid ='.$hosts['hostid']);
