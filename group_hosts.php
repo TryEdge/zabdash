@@ -20,7 +20,7 @@
 	
 	echo "	
 		<div class='align col-md-".$md." col-sm-".$md."' style='margin-bottom:80px;' >
-				<h3 style='color:#000 !important; margin-top:-2 px; text-align:center;'> " .$groupName."</h3>
+			<h3 style='color:#000 !important; margin-top:-2 px; text-align:center;'> " .$groupName."</h3>
 			<table id='tab_hosts' class='box table table-striped table-hover' border='0' >
 			<thead>
 				<tr>
@@ -69,7 +69,7 @@
 			}			 
 
 			echo "
-					<tr>
+					<tr height='46'>
 						<td  style='background-color:".$cor.";' title='".$conn."' data-order='".$value."'>
 						</td>
 						<td class='link2' style='vertical-align:middle; text-align:left; padding:5px;'>
@@ -94,7 +94,7 @@
 			else {
 				
 				echo "
-					<tr>
+					<tr height='46'>
 						<td  style='background-color:".$cor.";' title='".$conn."' data-order='".$value."'>
 						</td>
 						<td class='link2' style='vertical-align:middle; text-align:left; padding:5px;'>

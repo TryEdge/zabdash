@@ -36,7 +36,17 @@ switch (date("w")) {
 
 //User id 
 $userid = get_userid(CWebUser::getSessionCookie());
-																																																		
+
+if($initgroups != "") {
+	$arr_groups = array();
+	$arr_groups = explode(",",$initgroups);
+	
+	$groupsID =  implode(",",$arr_groups);
+	$allhosts = "all_hosts_grp.php?groupid=".$groupsID;	
+}					
+else {
+	$allhosts = "all_hosts.php";
+}																																														
 ?>
 
 <!DOCTYPE html>
@@ -204,7 +214,7 @@ $userid = get_userid(CWebUser::getSessionCookie());
                            </li>      
                            
                            <li class=' '>
-                           <a href='#' onclick="window.open('all_hosts.php','iframe1'); scrollWin();" data-original-title='Hosts'>                               
+                           <a href='#' onclick="window.open('<?php echo $allhosts; ?>','iframe1'); scrollWin();" data-original-title='Hosts'>                               
                                <i><img src="img/icon/host.png" alt="" style="width:20px;"></img></i>
                                <span class='hidden-minibar'><?php echo _('Hosts'); ?></span>
                            </a>  

@@ -7,6 +7,10 @@ $zabUser = "Admin";
 $zabPass = "zabbix";
 $zabURL = "https://zabbix.example.com/zabbix/";
 
+//initial comma separated hosts groups ID - get IDs in Configuration -> Hosts Groups 
+//ex:  $initgroups = "8,107,164";
+$initgroups = "";
+
 $useridlang = get_userid(CWebUser::getSessionCookie());
 $lang = get_user_lang($useridlang);
 

@@ -55,16 +55,7 @@ include('config.php');
 	<div class="row col-md-12 col-sm-12" style="margin-top:40px; margin-bottom: 0px; float:none; margin-right:auto; margin-left:auto; text-align:center;">
 	
 	<?php		
-	
-/*	require_once 'lib/ZabbixApi.class.php';
-	use ZabbixApi\ZabbixApi;
-	$api = new ZabbixApi($zabURL.'api_jsonrpc.php', ''. $zabUser .'', ''. $zabPass .'');
-	
-	if(isset($_REQUEST['groupid']) && $_REQUEST['groupid'] != '' && $_REQUEST['groupid'] != 0) {	
-		$include = 1;
-		$groupID = $_REQUEST['groupid'];		
-	}
-*/
+		
 	$dbHostsCount = DBselect( 'SELECT COUNT(hostid) AS hc FROM hosts WHERE status <> 3 AND flags = 0');
 	$hostsCount = DBFetch($dbHostsCount);	
 	
@@ -96,64 +87,25 @@ include('config.php');
 				$IP = DBFetch($dbIP);
 				
 				$hostOS = getOS($hosts['hostid']);	
-				
-/*				$trigger = $api->triggerGet(array(
-					'output' => 'extend',
-					'hostids' => $hosts['hostid'],
-					'sortfield' => 'priority',
-					'sortorder' => 'DESC',
-					//'only_true' => '1',
-					//'active' => '1', // include trigger state active not active
-					//'withUnacknowledgedEvents' => '1' // show only unacknowledgeevents						
-				));	*/
-				
-/*				if ($trigger) {
-	
-				// Highest Priority error
-				$hostdivprio = $trigger[0]->priority;
-		
-		 	   $priority = $event->priority;
-		 		$description = $event->description;
-				
+							
 				echo "
-						<tr>
-							<td  style='background-color:".$cor.";' title='".$conn."' data-order='".$value."'>
-							</td>
-							<td class='link2' style='vertical-align:middle; text-align:left; padding:5px;'>
-								<a href='host_detail.php?hostid=".$hosts['hostid']."' target='_self' >".$hosts['name']."</a>
-							</td>
-							<td style='text-align:center;' data-order='".$hostOS."'>
-								<img src='img/os/".$hostOS.".png' title='".$hostOS."' alt=''/>
-							</td>
-							<td style='text-align:center; vertical-align:middle; '>
-								".$IP['ip']."
-							</td>
+					<tr height='46'>
+						<td  style='background-color:".$cor.";' title='".$conn."' data-order='".$value."'>
+						</td>
+						<td class='link2' style='vertical-align:middle; text-align:left; padding:5px;'>
+							<a href='host_detail.php?hostid=".$hosts['hostid']."' target='_self' onmouseover='wait();'>".$hosts['name']."</a>
+						</td>
+						<td style='text-align:center;' data-order='".$hostOS."'>
+							<img src='img/os/".$hostOS.".png' title='".$hostOS."' alt=''/>
+						</td>
+						<td style='text-align:center; vertical-align:middle; '>
+							".$IP['ip']."
+						</td>
 
-							<td style='text-align:center; vertical-align:middle'>
-								". hostStatus($hosts['status'],$hosts['ms']) ."
-							</td>
-						</tr>";								
-				}
-				else {*/
-					
-					echo "
-						<tr>
-							<td  style='background-color:".$cor.";' title='".$conn."' data-order='".$value."'>
-							</td>
-							<td class='link2' style='vertical-align:middle; text-align:left; padding:5px;'>
-								<a href='host_detail.php?hostid=".$hosts['hostid']."' target='_self' onmouseover='wait();'>".$hosts['name']."</a>
-							</td>
-							<td style='text-align:center;' data-order='".$hostOS."'>
-								<img src='img/os/".$hostOS.".png' title='".$hostOS."' alt=''/>
-							</td>
-							<td style='text-align:center; vertical-align:middle; '>
-								".$IP['ip']."
-							</td>
-
-							<td style='text-align:center; vertical-align:middle'>
-								". hostStatus($hosts['status'],$hosts['ms']) ."
-							</td>
-						</tr>";					
+						<td style='text-align:center; vertical-align:middle'>
+							". hostStatus($hosts['status'],$hosts['ms']) ."
+						</td>
+					</tr>";					
 //				}						
 		}
 
