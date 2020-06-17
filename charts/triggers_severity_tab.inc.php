@@ -1,12 +1,34 @@
 <?php
 
-$triggersPr = $api->triggerGet(array(
-	'output' => 'extend',	
-	'sortfield' => 'priority',
-	'sortorder' => 'DESC',
-	'only_true' => '1',
-	'active' => '1'		
-));	
+if($todos == 0) {
+	if($initgroups != "") {
+		
+		$arr_groups = array();
+		$arr_groups = explode(",",$initgroups);
+		$groupsini = implode(',', $arr_groups);
+		
+		$triggersPr = $api->triggerGet(array(
+			'output' => 'extend',	
+			'sortfield' => 'priority',
+			'sortorder' => 'DESC',
+			'only_true' => '1',
+			'active' => '1',
+			'groupids' => $groupsini	
+		));
+	
+	}
+}	
+
+else {
+
+	$triggersPr = $api->triggerGet(array(
+		'output' => 'extend',	
+		'sortfield' => 'priority',
+		'sortorder' => 'DESC',
+		'only_true' => '1',
+		'active' => '1'		
+	));	
+}
 
 foreach($triggersPr as $t) {    			           
 	$valores[] = $t->priority;			            		

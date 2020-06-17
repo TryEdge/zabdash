@@ -1,17 +1,34 @@
 <?php
 
-$triggers = $api->triggerGet(array(
-	//'output' => 'extend',
-	/*'hostids' => $hostid,*/
-	//'sortfield' => 'priority',
-	//'sortorder' => 'DESC',
-	'only_true' => '1',
-	'active' => '1', // include trigger state active not active
-	//'withUnacknowledgedEvents' => '1',	
-	//'withLastEventUnacknowledged' => '1',	
-	'selectHosts' => 1
-	//'min_severity' => 1			
-));	
+if($todos == 0) {
+
+	if($initgroups != "") {
+		$arr_groups = array();
+		$arr_groups = explode(",",$initgroups);
+		$groupsini = implode(',', $arr_groups);
+		//echo "grupos<br>";
+		//print_r($arr_groups);	
+		//print_r($groupsini);	
+		
+		$triggers = $api->triggerGet(array(
+			'groupids' => $groupsini,
+			'only_true' => '1',
+			'active' => '1', // include trigger state active not active	
+			'selectHosts' => 1			
+		));
+	
+	}
+	
+}
+
+else {
+
+	$triggers = $api->triggerGet(array(
+		'only_true' => '1',
+		'active' => '1', // include trigger state active not active
+		'selectHosts' => 1	
+	));	
+}
 
 $conta = count($triggers);
 
@@ -51,11 +68,6 @@ $names = "'$names1'";
 
 $values1 = array_values($hosts);
 $ids = $hosts_ids;
-
-/*var_dump($hosts_ids);
-var_dump($hosts);
-var_dump($ids2);*/
-
 
 foreach ($values1 as $key => $v) {
     $values2[] = '{y:'.$v.', url: \'../zabbix.php?action=problem.view&page=1&filter_show=1&filter_application=&filter_name=&filter_severity=0&filter_inventory[0][field]=type&filter_inventory[0][value]=&filter_evaltype=0&filter_tags[0][tag]=&filter_tags[0][operator]=0&filter_tags[0][value]=&filter_show_tags=3&filter_tag_name_format=0&filter_tag_priority=&filter_show_timeline=1&filter_set=1&filter_hostids[]='.$ids[$key].'\'}' ;

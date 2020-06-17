@@ -1,5 +1,36 @@
 <?php
 
+if($todos == 0) {
+	if($initgroups != "") {
+		$arr_groups = array();
+		$arr_groups = explode(",",$initgroups);
+		$groupsini = implode(',', $arr_groups);
+		
+		$triggersUn = $api->triggerGet(array(
+			'groupids' => $groupsini,
+			'output' => 'extend',	
+			'sortfield' => 'lastchange',
+			'sortorder' => 'ASC',
+			'only_true' => '1',
+			'active' => '1', // include trigger state active not active	
+			'withUnacknowledgedEvents' => '1'			
+		));
+	
+	
+		$triggersAc = $api->triggerGet(array(
+			'groupids' => $groupsini,
+			'output' => 'extend',	
+			'sortfield' => 'lastchange',
+			'sortorder' => 'ASC',
+			'only_true' => '1',
+			'active' => '1', // include trigger state active not active	
+			/*'withAcknowledgedEvents' => '1'*/					
+		));		
+	
+	}	
+}
+
+else {
 
 $triggersUn = $api->triggerGet(array(
 	'output' => 'extend',	
@@ -20,6 +51,8 @@ $triggersAc = $api->triggerGet(array(
 	'active' => '1', // include trigger state active not active	
 	/*'withAcknowledgedEvents' => '1'*/					
 ));	
+
+}
 
 //Unack
 foreach($triggersUn as $t) {    			           

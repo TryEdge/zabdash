@@ -13,15 +13,15 @@ $groupID = array();
 
 if(isset($_REQUEST['groupid']) && $_REQUEST['groupid'] != '' && $_REQUEST['groupid'] != 0) {
 
-		$groupID = explode(",",$_REQUEST['groupid']);
-		
-		if(in_array(-1, $groupID)) {		
-			$include = "0";	
-		}
-		
-		else {		
-			$include = "1";
-		}
+	$groupID = explode(",",$_REQUEST['groupid']);
+	
+	if(in_array(-1, $groupID)) {		
+		$include = "0";	
+	}
+	
+	else {		
+		$include = "1";
+	}
 }
 
 else {

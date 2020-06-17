@@ -37,16 +37,34 @@ switch (date("w")) {
 //User id 
 $userid = get_userid(CWebUser::getSessionCookie());
 
-if($initgroups != "") {
-	$arr_groups = array();
-	$arr_groups = explode(",",$initgroups);
+if(!isset($_REQUEST['grpids']) || $_REQUEST['grpids'] != 0 || $_REQUEST['grpids'] == "") {
+
+	//hosts groups IDs
+	if($initgroups != "") {
+		$arr_groups = array();
+		$arr_groups = explode(",",$initgroups);
+		
+		$groupsini =  implode(",",$arr_groups);
+		$allhosts = "all_hosts_grp.php?groupid=".$groupsini;	
+		$mainpage = "main.php";
+		$zabdash = "zabdash.php";
+		
+	}
 	
-	$groupsID =  implode(",",$arr_groups);
-	$allhosts = "all_hosts_grp.php?groupid=".$groupsID;	
-}					
+	else {
+		$allhosts = "all_hosts.php";
+		$mainpage = "main.php?grpids=0";
+		$zabdash = "zabdash.php?grpids=0";
+	}
+}
+
 else {
+	//$grpids = "";
 	$allhosts = "all_hosts.php";
-}																																														
+	$mainpage = "main.php?grpids=0";
+	$zabdash = "zabdash.php?grpids=0";
+}
+																																																	
 ?>
 
 <!DOCTYPE html>
@@ -207,7 +225,7 @@ else {
                        <ul class="nav nav-list">
                        
                            <li class=' '>
-                           <a href='#' onclick="window.open('zabdash.php','_self'); scrollWin();" data-original-title='ZabDash'>
+                           <a href='#' onclick="window.open('<?php echo $zabdash; ?>','_self'); scrollWin();" data-original-title='ZabDash'>
                                <i class='fa fa-dashboard'></i>
                                <span class='hidden-minibar'>Zabdash</span>
                            </a>
@@ -361,7 +379,7 @@ else {
 </script> 
 
 </div>   
- <iframe id="iframe1" name="iframe1" class="iframe iframe-side" src="main.php" scrolling="yes" style="position: absolute; height: 100%; margin-bottom: 70px; border: none; display:block;
+ <iframe id="iframe1" name="iframe1" class="iframe iframe-side" src="<?php echo $mainpage; ?>" scrolling="yes" style="position: absolute; height: 100%; margin-bottom: 70px; border: none; display:block;
  "></iframe>
         	
 </div>		

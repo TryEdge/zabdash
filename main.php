@@ -19,6 +19,15 @@ $hostsCount = DBFetch($dbHostsCount);
 //$dbTrig = DBselect( 'SELECT COUNT(hostid) AS hc FROM hosts WHERE status = 1 AND flags = 0');
 //$trigCount = DBFetch($dbTrig);	
 
+//define if all hosts or groups
+if(!isset($_REQUEST['grpids']) || $_REQUEST['grpids'] != 0 || $_REQUEST['grpids'] == "") {
+	$todos = 0;
+}
+else {
+	$todos = 1;
+}	
+
+//get triggers
 $trigger = $api->triggerGet(array(
 	'output' => 'extend',	
 	'only_true' => '1',
@@ -50,70 +59,70 @@ $users = $api->userGet(array(
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ZabDash - Home </title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	 <meta http-equiv="Pragma" content="public">           
+ <title>ZabDash - Home </title>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <meta http-equiv="Pragma" content="public">           
 
-    <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
-	 <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />    
-    <link href="css/bootstrap.css" rel="stylesheet">        		   
-    <link rel="stylesheet" type="text/css" href="css/layout.css">
-    <meta http-equiv="refresh" content= "600"/>
-    
-     <!-- this page specific styles 
-    <link rel="stylesheet" href="css/compiled/index.css" type="text/css" media="screen" /> -->    
+ <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+ <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />    
+ <link href="css/bootstrap.css" rel="stylesheet">        		   
+ <link rel="stylesheet" type="text/css" href="css/layout.css">
+ <meta http-equiv="refresh" content= "600"/>
+ 
+  <!-- this page specific styles 
+ <link rel="stylesheet" href="css/compiled/index.css" type="text/css" media="screen" /> -->    
 
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+ <!--[if lt IE 9]>
+   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+ <![endif]-->
  	<script src="js/jquery.min.js"></script> 
-   <link href="css/styles.css" rel="stylesheet" type="text/css" />
+<link href="css/styles.css" rel="stylesheet" type="text/css" />
 <!--   <link href="css/style-dash.css" rel="stylesheet" type="text/css" />    -->
-    
-    <!-- odometer -->
-	<link href="css/odometer.css" rel="stylesheet">
-	<script src="js/odometer.js"></script>		
-	
-	<!-- Datatables -->	
-	<script src="js/media/js/jquery.dataTables.min.js"></script>
-	<link href="js/media/css/dataTables.bootstrap.css" type="text/css" rel="stylesheet" />
-	<script src="js/media/js/dataTables.bootstrap.js"></script>
-	<script src="js/extensions/Buttons/js/dataTables.buttons.min.js"></script>
-	<link href="js/extensions/Select/css/select.bootstrap.css" type="text/css" rel="stylesheet" />
-	<script src="js/extensions/Select/js/dataTables.select.min.js"></script>
-    
-	<!-- <link href="less/style.less" rel="stylesheet"  title="lessCss" id="lessCss"> -->
-	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-	<!--[if lt IE 9]>
-	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-	<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-	<![endif]-->         
-	<!-- <link href="fonts/fonts.css" rel="stylesheet" type="text/css" /> -->
-     
-  	 <?php 
- 	 	echo '<link rel="stylesheet" type="text/css" href="css/skin-material.css">'; 
-	 	echo '<link rel="stylesheet" type="text/css" href="css/style-material.css">';				
- 	 ?>  	
+ 
+ <!-- odometer -->
+<link href="css/odometer.css" rel="stylesheet">
+<script src="js/odometer.js"></script>		
 
-	<style type="text/css">
-		@media screen and (min-width: 1201px) and (max-width: 2200px) {
-	  	#footer-bar {
-	    margin-top: 5px;
-	    height: 20px;
-	  	 }
-		}
-		.triggersUnack_filter { display:none !important; }
-	</style>	
+<!-- Datatables -->	
+<script src="js/media/js/jquery.dataTables.min.js"></script>
+<link href="js/media/css/dataTables.bootstrap.css" type="text/css" rel="stylesheet" />
+<script src="js/media/js/dataTables.bootstrap.js"></script>
+<script src="js/extensions/Buttons/js/dataTables.buttons.min.js"></script>
+<link href="js/extensions/Select/css/select.bootstrap.css" type="text/css" rel="stylesheet" />
+<script src="js/extensions/Select/js/dataTables.select.min.js"></script>
+ 
+<!-- <link href="less/style.less" rel="stylesheet"  title="lessCss" id="lessCss"> -->
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+<![endif]-->         
+<!-- <link href="fonts/fonts.css" rel="stylesheet" type="text/css" /> -->
+  
+<?php 
+echo '<link rel="stylesheet" type="text/css" href="css/skin-material.css">'; 
+echo '<link rel="stylesheet" type="text/css" href="css/style-material.css">';				
+?>  	
+
+<style type="text/css">
+	@media screen and (min-width: 1201px) and (max-width: 2200px) {
+  		#footer-bar {
+    		margin-top: 5px;
+    		height: 20px;
+  	 	}
+	}
+	.triggersUnack_filter { display:none !important; }
+</style>	
 
 <link href="css/loader.css" type="text/css" rel="stylesheet" />
 
 <script type="text/javascript">
- jQuery(window).load(function () {
-	$(".loader").fadeOut("slow"); //retire o delay quando for copiar!  delay(1500).
-	$("#container-fluid").toggle("fast");    
-});          
+	jQuery(window).load(function () {
+		$(".loader").fadeOut("slow"); //retire o delay quando for copiar!  delay(1500).
+		$("#container-fluid").toggle("fast");    
+	});          
 </script>	
 </head>
 
@@ -273,7 +282,7 @@ setTimeout(function(){
 	<div class="col-sm-12 col-md-12 align" style="margin-left: 0px;"> 	 				              
 	   <div id="tickets_status" class="widget2 widget-table action-table striped card1" style="background:#fff !important;" >
 	      <div class="widget-header">                 
-	      	<h3><i class="fa fa-list" style="margin-left:7px;">&nbsp;&nbsp;&nbsp;</i><?php echo $labels['Unacknowledged Triggers'] ."   (". count($triggerUnack) .")"; ?></h3>
+	      	<h3><i class="fa fa-list" style="margin-left:7px;">&nbsp;&nbsp;&nbsp;</i><?php echo $labels['Unacknowledged Triggers'];// ."   (". count($triggerUnack) .")"; ?></h3>
 	      	 <span  class=""></span>               
 	      </div> 
 	      <!-- /widget-header -->      

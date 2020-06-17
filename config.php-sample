@@ -14,7 +14,7 @@ $initgroups = "";
 $useridlang = get_userid(CWebUser::getSessionCookie());
 $lang = get_user_lang($useridlang);
 
-$version = '1.2.1';
+$version = '1.2.2';
 
 //Translate option: en_US or pt_BR
 $labels = include_once 'locales/'.$lang.'.php';
