@@ -12,9 +12,9 @@ require_once 'lib/ZabbixApi.class.php';
 use ZabbixApi\ZabbixApi;
 $api = new ZabbixApi($zabURL.'api_jsonrpc.php', ''. $zabUser .'', ''. $zabPass .'');
 
-
-$dbHostsCount = DBselect( 'SELECT SUM(case when status = 0 then 1 else 0 end) AS active, SUM(case when status = 1 then 1 else 0 end) AS inactive, SUM(case when status = 3 then 1 else 0 end) AS template FROM hosts WHERE flags IN (0,4)');
-$hostsCount = DBFetch($dbHostsCount);	
+//$dbHostsCount = DBselect( 'SELECT SUM(case when status = 0 then 1 else 0 end) AS active, SUM(case when status = 1 then 1 else 0 end) AS inactive, SUM(case when status = 3 then 1 else 0 end) AS template FROM hosts WHERE flags IN (0,4)');
+//$hostsCount = DBFetch($dbHostsCount);
+//$dbHosts = DBselect('SELECT h.hostid, h.name, h.status, h.snmp_available AS sa, h.snmp_disable_until AS sd, h.flags FROM hosts h, hosts_groups hg WHERE hg.groupid IN ("'.$groupsini.'") AND h.hostid = hg.hostid ORDER BY h.name ASC');
 
 //$dbTrig = DBselect( 'SELECT COUNT(hostid) AS hc FROM hosts WHERE status = 1 AND flags = 0');
 //$trigCount = DBFetch($dbTrig);	
@@ -22,17 +22,101 @@ $hostsCount = DBFetch($dbHostsCount);
 //define if all hosts or groups
 if(!isset($_REQUEST['grpids']) || $_REQUEST['grpids'] != 0 || $_REQUEST['grpids'] == "") {
 	$todos = 0;
+	if($initgroups != "") {		
+		$arr_groups = array();
+		$arr_groups = explode(",",$initgroups);
+		$groupsini = implode(",", $arr_groups);	
+		
+		for($i=0;$i < count($arr_groups);$i++) {
+			$grp[$i] = $arr_groups[$i]; 					
+		}	
+				
+		//number of hosts groups
+		$countHostsGroups = count($arr_groups);	
+	
+	//number of hosts
+	$hostsCount = $api->hostGet(array(
+		'output' => 'extend',
+		'groupids' => [$grp[0],$grp[1],$grp[2],$grp[3],$grp[4]]
+	));		
+	
+	$countHosts = count($hostsCount);	
+	
+	//active hosts
+	$activeHosts =0;
+	foreach($hostsCount as $a) {    			           
+		$active = $a->status;
+		if($active == 0) {
+			$activeHosts += 1 ;
+		}				            		
+	}
+	
+	//inactive hosts
+	$inactiveHosts = ($countHosts - $activeHosts);
+	
+	
+	//get triggers
+	$trigger = $api->triggerGet(array(
+		'output' => 'extend',	
+		'only_true' => '1',
+		'active' => '1', // include trigger state active not active
+		'selectHosts' => 1,
+		'groupids' =>  [$grp[0],$grp[1],$grp[2],$grp[3],$grp[4]]							
+	));	
+	
+	
+	$triggerUnack = $api->triggerGet(array(
+		'output' => 'extend',	
+		'sortfield' => 'priority',
+		'sortorder' => 'DESC',
+		'only_true' => '1',
+		'active' => '1', // include trigger state active not active
+		'withUnacknowledgedEvents' => '1', 
+		'expandDescription' => '1',
+		'selectHosts' => 1,
+		'groupids' =>  [$grp[0],$grp[1],$grp[2],$grp[3],$grp[4]]					
+	));		
+			
+	}
 }
+
 else {
 	$todos = 1;
-}	
+
+	//number of hosts groups
+	$hostsGroups = $api->hostgroupGet(array(
+	'output' => 'extend'
+	));	
+	
+	$countHostsGroups = count($hostsGroups);
+//}
+
+//number of hosts
+$hostsCount = $api->hostGet(array(
+	'output' => 'extend'
+));		
+
+$countHosts = count($hostsCount);	
+
+//active hosts
+$activeHosts =0;
+foreach($hostsCount as $a) {    			           
+	$active = $a->status;
+	if($active == 0) {
+		$activeHosts += 1 ;
+	}				            		
+}
+
+//inactive hosts
+$inactiveHosts = ($countHosts - $activeHosts);
+
 
 //get triggers
 $trigger = $api->triggerGet(array(
 	'output' => 'extend',	
 	'only_true' => '1',
 	'active' => '1', // include trigger state active not active
-	'selectHosts' => 1							
+	'selectHosts' => 1						
 ));	
 
 
@@ -44,16 +128,17 @@ $triggerUnack = $api->triggerGet(array(
 	'active' => '1', // include trigger state active not active
 	'withUnacknowledgedEvents' => '1', 
 	'expandDescription' => '1',
-	'selectHosts' => 1							
+	'selectHosts' => 1				
 ));
 
-$hostsGroups = $api->hostgroupGet(array(
-	'output' => 'extend',	
-));
+}
 
+
+//number of users
 $users = $api->userGet(array(
 	'output' => 'extend'	
 ));
+
 ?>
 
 <!DOCTYPE html>
@@ -152,7 +237,7 @@ echo '<link rel="stylesheet" type="text/css" href="css/style-material.css">';
 						   <div class="panel-right right" style='cursor:pointer;' onclick="window.open('../hosts.php');">
 	         				<span class="chamado"><?php echo _('Hosts'); ?></span><br>
 						     	<div id="odometer1" class="odometer" style="font-size: 25px;">   </div><p></p>
-	            			<span class="date" title="Active/Inactive"><span style="font-weightx:bold; color:#e33734;"><?php echo "<span style='color:#429e47;'>".$hostsCount['active']."</span><span class='date'> / </span> ". $hostsCount['inactive']; ?></span></span>												
+	            			<span class="date" title="Active/Inactive"><span style="font-weightx:bold; color:#e33734;"><?php echo "<span style='color:#429e47;'>".$activeHosts."</span><span class='date'> / </span> ". $inactiveHosts; ?></span></span>												
 						   </div>
 					 </div>
 			  </div>
@@ -204,9 +289,10 @@ window.odometerOptions = {
 };
 
 setTimeout(function(){
-    odometer1.innerHTML = <?php echo ($hostsCount['active'] + $hostsCount['inactive']); ?>;
+    //odometer1.innerHTML = <?php echo ($hostsCount['active'] + $hostsCount['inactive']); ?>;
+    odometer1.innerHTML = <?php echo $countHosts; ?>;
     odometer2.innerHTML = <?php echo count($trigger); ?>;
-    odometer3.innerHTML = <?php echo count($hostsGroups); ?>;
+    odometer3.innerHTML = <?php echo $countHostsGroups; ?>;
     odometer4.innerHTML = <?php echo count($users); ?>;
 }, 1000);
 

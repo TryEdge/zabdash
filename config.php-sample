@@ -5,9 +5,10 @@ require_once 'inc/functions.inc.php';
 $zabServer = "zabbix.example.com";
 $zabUser = "Admin";
 $zabPass = "zabbix";
-$zabURL = "https://zabbix.example.com/zabbix/";
+$zabURL = "http://zabbix.example.com/zabbix/";
 
 //initial comma separated hosts groups ID - get IDs in Configuration -> Hosts Groups 
+// 5 group max
 //ex:  $initgroups = "8,107,164";
 $initgroups = "";
 

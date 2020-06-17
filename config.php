@@ -8,6 +8,7 @@ $zabPass = "zabbix";
 $zabURL = "https://zabbix.example.com/zabbix/";
 
 //initial comma separated hosts groups ID - get IDs in Configuration -> Hosts Groups 
+// 5 group max
 //ex:  $initgroups = "8,107,164";
 $initgroups = "";
 

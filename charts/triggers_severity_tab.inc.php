@@ -7,13 +7,17 @@ if($todos == 0) {
 		$arr_groups = explode(",",$initgroups);
 		$groupsini = implode(',', $arr_groups);
 		
+		for($i=0;$i < count($arr_groups);$i++) {
+			$grp[$i] = $arr_groups[$i]; 					
+		}
+		
 		$triggersPr = $api->triggerGet(array(
 			'output' => 'extend',	
 			'sortfield' => 'priority',
 			'sortorder' => 'DESC',
 			'only_true' => '1',
 			'active' => '1',
-			'groupids' => $groupsini	
+			'groupids' => [$grp[0],$grp[1],$grp[2],$grp[3],$grp[4]]
 		));
 	
 	}
@@ -32,12 +36,11 @@ else {
 
 foreach($triggersPr as $t) {    			           
 	$valores[] = $t->priority;			            		
- }
+}
 
 $contagem = array_count_values($valores);
 	
-foreach($contagem AS $numero => $vezes) {
-		
+foreach($contagem AS $numero => $vezes) {	
 	$priori[get_severity($numero)] = $vezes;
 }	
 

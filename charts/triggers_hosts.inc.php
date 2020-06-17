@@ -6,19 +6,18 @@ if($todos == 0) {
 		$arr_groups = array();
 		$arr_groups = explode(",",$initgroups);
 		$groupsini = implode(',', $arr_groups);
-		//echo "grupos<br>";
-		//print_r($arr_groups);	
-		//print_r($groupsini);	
+
+		for($i=0;$i < count($arr_groups);$i++) {
+			$grp[$i] = $arr_groups[$i]; 					
+		}
 		
 		$triggers = $api->triggerGet(array(
-			'groupids' => $groupsini,
+			'groupids' => [$grp[0],$grp[1],$grp[2],$grp[3],$grp[4]],
 			'only_true' => '1',
 			'active' => '1', // include trigger state active not active	
 			'selectHosts' => 1			
-		));
-	
-	}
-	
+		));	
+	}	
 }
 
 else {
