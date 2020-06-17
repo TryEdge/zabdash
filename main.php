@@ -12,13 +12,6 @@ require_once 'lib/ZabbixApi.class.php';
 use ZabbixApi\ZabbixApi;
 $api = new ZabbixApi($zabURL.'api_jsonrpc.php', ''. $zabUser .'', ''. $zabPass .'');
 
-//$dbHostsCount = DBselect( 'SELECT SUM(case when status = 0 then 1 else 0 end) AS active, SUM(case when status = 1 then 1 else 0 end) AS inactive, SUM(case when status = 3 then 1 else 0 end) AS template FROM hosts WHERE flags IN (0,4)');
-//$hostsCount = DBFetch($dbHostsCount);
-//$dbHosts = DBselect('SELECT h.hostid, h.name, h.status, h.snmp_available AS sa, h.snmp_disable_until AS sd, h.flags FROM hosts h, hosts_groups hg WHERE hg.groupid IN ("'.$groupsini.'") AND h.hostid = hg.hostid ORDER BY h.name ASC');
-
-//$dbTrig = DBselect( 'SELECT COUNT(hostid) AS hc FROM hosts WHERE status = 1 AND flags = 0');
-//$trigCount = DBFetch($dbTrig);	
-
 //define if all hosts or groups
 if(!isset($_REQUEST['grpids']) || $_REQUEST['grpids'] != 0 || $_REQUEST['grpids'] == "") {
 	$todos = 0;
@@ -288,8 +281,7 @@ window.odometerOptions = {
    format: '( ddd).dd'
 };
 
-setTimeout(function(){
-    //odometer1.innerHTML = <?php echo ($hostsCount['active'] + $hostsCount['inactive']); ?>;
+setTimeout(function(){   
     odometer1.innerHTML = <?php echo $countHosts; ?>;
     odometer2.innerHTML = <?php echo count($trigger); ?>;
     odometer3.innerHTML = <?php echo $countHostsGroups; ?>;
