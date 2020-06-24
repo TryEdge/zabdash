@@ -1,9 +1,9 @@
 # Announcement:
 
-I'm suspending the development of my add-ons due the change new Zabbix to MVC development. The new structure demands a large rewrite of code, which i can't do at moment.
+I'm suspending the development of my add-ons due the change new Zabbix 5.x to MVC. The new structure demands a large rewrite of code, which i can't do at moment.
 
 
-Estou suspendendo o desenvolvimento dos meus complementos devido à mudança do novo Zabbix para o desenvolvimento do MVC. A nova estrutura exige uma grande reescrita de código, o que não posso fazer no momento.
+Estou suspendendo o desenvolvimento dos meus complementos devido à mudança do novo Zabbix 5.x para o desenvolvimento MVC. A nova estrutura exige uma grande reescrita de código, o que não posso fazer no momento.
 
 
 
